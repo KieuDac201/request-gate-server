@@ -1,0 +1,25 @@
+stages:
+  - CheckPhpcs
+  - Deploy
+
+.PhpcsScan: &PhpcsScan |
+  pushComment(){
+      curl --request POST --header "PRIVATE-TOKEN: $USER_TOKEN" \
+      --form "note=$OUTPUT" --form "path=dudeism.md" \
+      --form "line=1" --form "line_type=new" \
+      https://git.hblab.vn/api/v4/projects/$CI_PROJECT_ID/repository/commits/$CI_COMMIT_SHA/comments
+      echo $OUTPUT
+      exit 1
+  }
+
+  OUTPUT=$(phpcs --standard=PSR2 app/) || pushComment
+
+Phpcs:
+  stage: CheckPhpcs
+  image: php:7.2-alpine
+  script:
+    - curl -OL https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar
+    - curl -OL https://squizlabs.github.io/PHP_CodeSniffer/phpcbf.phar
+    - mv phpcs.phar /usr/local/bin/phpcs && chmod +x /usr/local/bin/phpcs
+    - mv phpcbf.phar /usr/local/bin/phpcbf && chmod +x /usr/local/bin/phpcbf
+    - *PhpcsScan
