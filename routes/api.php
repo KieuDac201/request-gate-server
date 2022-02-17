@@ -23,6 +23,10 @@ Route::group(['namespace' => 'Api', 'prefix' => 'v1'], function () {
     Route::group(['as' => 'api.v1.'], function () {
         Route::group(['prefix' => 'users'], function () {
             Route::get('/', 'UserController@index');
+            Route::get('/show/{id}', 'UserController@show');
+            Route::post('/store', 'UserController@store');
+            Route::put('/update/{user}', 'UserController@update');
+            Route::delete('/delete/{user}', 'UserController@destroy');
         });
     });
 });
