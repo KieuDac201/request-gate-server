@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 class LoginController extends Controller
 {
 
-    public function login(Request $request)
+    public function loginApi(Request $request)
     {
         if (!Auth::attempt($request->only('email', 'password'))) {
             return response()->json([
@@ -32,7 +32,7 @@ class LoginController extends Controller
     }
 
 
-    public function logout(Request $request)
+    public function logoutApi(Request $request)
     {
         auth()->user()->tokens()->delete();
         return response()->json(['message' => 'User successfully signed out']);
