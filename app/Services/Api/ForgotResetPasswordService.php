@@ -19,7 +19,7 @@ class ForgotResetPasswordService extends AbstractService
     }
 
     public function forgotPassword($params)
-    {   
+    {
         $status = Password::sendResetLink($params);
         if ($status == Password::RESET_LINK_SENT) {
             return [
@@ -29,7 +29,7 @@ class ForgotResetPasswordService extends AbstractService
     }
 
     public function resetPassword(User $user, $params)
-    {   
+    {
         $status = Password::reset(
             $params,
             function ($user) use ($params) {
