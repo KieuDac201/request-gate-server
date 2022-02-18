@@ -45,5 +45,4 @@ class ForgotResetPasswordService extends AbstractService
             'message'=> __($status)
         ], 500);
     }
-
 }

@@ -5,7 +5,6 @@ namespace App\Http\Requests\Api\Users;
 use App\Http\Requests\Api\ApiRequest;
 use Illuminate\Validation\Rules\Password as RulesPassword;
 
-
 class ResetPasswordRequest extends ApiRequest
 {
     /**
