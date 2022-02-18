@@ -20,7 +20,7 @@ class ForgotResetPasswordRepository extends BaseRepository
     }
 
     public function resetPassword(Model $model, array $data)
-    {   
+    {
         $model->forceFill([
             'password' => Hash::make($data['password']),
             'remember_token' => Str::random(60),
