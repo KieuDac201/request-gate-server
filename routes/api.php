@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ForgotResetPasswordController;
-use App\Http\Controllers\Api\Auth\LoginController;
+
 
 
 /*
