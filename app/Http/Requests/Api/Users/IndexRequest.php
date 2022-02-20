@@ -14,7 +14,8 @@ class IndexRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            //
+            'email' => 'required|email',
+            'password' => 'required'
         ];
     }
 
@@ -26,7 +27,9 @@ class IndexRequest extends ApiRequest
     public function messages(): array
     {
         return [
-            //
+            'email.required' => 'Email is required!',
+            'email.email' => 'Email is not valid',
+            'password.required' => 'Password is required!',
         ];
     }
 

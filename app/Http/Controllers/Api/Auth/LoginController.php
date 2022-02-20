@@ -2,36 +2,22 @@
 
 namespace App\Http\Controllers\Api\Auth;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use App\Http\Controllers\Api\ApiController;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use App\Models\User;
+use App\Services\Api\LoginService;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\Api\Users\IndexRequest;
 
-class LoginController extends Controller
+class LoginController extends ApiController
 {
 
-    public function loginApi(Request $request)
+    public function loginApi(IndexRequest $request, LoginService $loginService)
     {
-        if (!Auth::attempt($request->only('email', 'password'))) {
-            return response()->json([
-                'message' => 'Invalid login details'
-            ], 401);
-        }
-
-        $user = User::where('email', $request['email'])->firstOrFail();
-
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'Bearer',
-            'message' => "User logged in successfully",
-        ]);
+        $params = $request->only('email', 'password');
+        return $this->doRequest(function () use ($loginService, $params) {
+            return $loginService->login($params);
+        });
     }
-
-
     public function logoutApi(Request $request)
     {
         auth()->user()->tokens()->delete();
