@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use App\Contracts\Repositories\UserRepositoryInterface;
 use App\Repositories\UserRepository;
+use App\Contracts\Repositories\RoleRepositoryInterface;
+use App\Repositories\RoleRepository;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -12,6 +14,10 @@ class RepositoryServiceProvider extends ServiceProvider
         'user' => [
             UserRepositoryInterface::class,
             UserRepository::class,
+        ],
+        'role' => [
+            RoleRepositoryInterface::class,
+            RoleRepository::class,
         ],
     ];
 

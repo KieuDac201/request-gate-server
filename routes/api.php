@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ForgotResetPasswordController;
 use App\Http\Controllers\Api\Auth\LoginController;
+use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\RoleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,10 +28,14 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('logout', [LoginController::class, 'logoutApi']);
 
     Route::group(['prefix' => 'users'], function () {
-        Route::get('/', 'UserController@index');
-        Route::get('/show/{id}', 'UserController@show');
-        Route::post('/store', 'UserController@store');
-        Route::put('/update/{user}', 'UserController@update');
-        Route::delete('/delete/{user}', 'UserController@destroy');
+        Route::get('/', [UserController::class,'index']);
+        Route::get('/show/{id}', [UserController::class,'show']);
+        Route::post('/store', [UserController::class,'store']);
+        Route::put('/update/{user}', [UserController::class,'update']);
+        Route::delete('/delete/{user}', [UserController::class,'destroy']);
+    });
+
+    Route::group(['prefix' => 'roles'], function () {
+        Route::get('/', [RoleController::class, 'index']);
     });
 });
