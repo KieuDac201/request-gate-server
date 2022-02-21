@@ -1,6 +1,10 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\ForgotResetPasswordController;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -12,6 +16,8 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Route::post('forgot-password', [ForgotResetPasswordController::class, 'forgotPassword']);
+Route::post('reset-password', [ForgotResetPasswordController::class, 'resetPassword']);
 
 Route::group(['namespace' => 'Api', 'prefix' => 'v1'], function () {
     Route::group(['as' => 'api.v1.'], function () {
