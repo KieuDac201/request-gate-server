@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ForgotResetPasswordController;
-
+use App\Http\Controllers\Api\Auth\LoginController;
 
 
 /*
@@ -16,17 +16,21 @@ use App\Http\Controllers\Api\ForgotResetPasswordController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+//api not need logged in
 Route::post('forgot-password', [ForgotResetPasswordController::class, 'forgotPassword']);
 Route::post('reset-password', [ForgotResetPasswordController::class, 'resetPassword']);
+Route::post('login', [LoginController::class, 'login']);
 
-Route::group(['namespace' => 'Api', 'prefix' => 'v1'], function () {
-    Route::group(['as' => 'api.v1.'], function () {
-        Route::group(['prefix' => 'users'], function () {
-            Route::get('/', 'UserController@index');
-            Route::get('/show/{id}', 'UserController@show');
-            Route::post('/store', 'UserController@store');
-            Route::put('/update/{user}', 'UserController@update');
-            Route::delete('/delete/{user}', 'UserController@destroy');
-        });
+//api need logged in
+Route::group(['middleware' => ['auth:sanctum']], function () {
+    Route::post('logout', [LoginController::class, 'logout']);
+
+    Route::group(['prefix' => 'users'], function () {
+        Route::get('/', 'UserController@index');
+        Route::get('/show/{id}', 'UserController@show');
+        Route::post('/store', 'UserController@store');
+        Route::put('/update/{user}', 'UserController@update');
+        Route::delete('/delete/{user}', 'UserController@destroy');
     });
 });
