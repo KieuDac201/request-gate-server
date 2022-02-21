@@ -2,38 +2,25 @@
 
 namespace App\Http\Controllers\Api\Auth;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use App\Http\Controllers\Api\ApiController;
+use Illuminate\Http\Request;
+use App\Services\Api\LoginService;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\Api\Users\LoginRequest;
 
-class LoginController extends Controller
+class LoginController extends ApiController
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Login Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles authenticating users for the application and
-    | redirecting them to your home screen. The controller uses a trait
-    | to conveniently provide its functionality to your applications.
-    |
-    */
 
-    use AuthenticatesUsers;
-
-    /**
-     * Where to redirect users after login.
-     *
-     * @var string
-     */
-    protected $redirectTo = '/home';
-
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
+    public function loginApi(LoginRequest $request, LoginService $loginService)
     {
-        $this->middleware('guest')->except('logout');
+        $params = $request->only('email', 'password');
+        return $this->doRequest(function () use ($loginService, $params) {
+            return $loginService->login($params);
+        });
+    }
+    public function logoutApi(Request $request)
+    {
+        auth()->user()->tokens()->delete();
+        return response()->json(['message' => 'User successfully signed out']);
     }
 }
