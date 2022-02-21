@@ -10,7 +10,7 @@ class LoginService extends AbstractService
     public function login($params)
     {
         if (!Auth::attempt($params)) {
-                return response([
+                return ([
                     'message'=> 'Invalid login details'
                 ]);
         }

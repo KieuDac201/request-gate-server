@@ -3,8 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ForgotResetPasswordController;
-
-
+use App\Http\Controllers\Api\Auth\LoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,11 +19,11 @@ use App\Http\Controllers\Api\ForgotResetPasswordController;
 //api not need logged in
 Route::post('forgot-password', [ForgotResetPasswordController::class, 'forgotPassword']);
 Route::post('reset-password', [ForgotResetPasswordController::class, 'resetPassword']);
-Route::post('login', [LoginController::class, 'login']);
+Route::post('login', [LoginController::class, 'loginApi']);
 
 //api need logged in
 Route::group(['middleware' => ['auth:sanctum']], function () {
-    Route::post('logout', [LoginController::class, 'logout']);
+    Route::post('logout', [LoginController::class, 'logoutApi']);
 
     Route::group(['prefix' => 'users'], function () {
         Route::get('/', 'UserController@index');
