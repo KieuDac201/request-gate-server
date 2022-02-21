@@ -9,4 +9,5 @@ return [
     '401' =>'unauthorized.',
     '500' =>' A server error has occurred.',
     '403' =>' You do not have access to this screen.',
+    'not_found' =>'Khong tim thay file'
 ];
