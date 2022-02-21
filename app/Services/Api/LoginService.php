@@ -14,12 +14,11 @@ class LoginService extends AbstractService
                     'message'=> 'Invalid login details'
                 ]);
         }
-
             $user = User::where('email', $params['email'])->firstOrFail();
 
             $token = $user->createToken('auth_token')->plainTextToken;
 
-            return response([
+            return ([
                 'access_token' => $token,
                 'token_type' => 'Bearer',
                 'message'=> 'User logged in successfully'

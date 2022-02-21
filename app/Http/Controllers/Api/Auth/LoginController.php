@@ -6,12 +6,12 @@ use App\Http\Controllers\Api\ApiController;
 use Illuminate\Http\Request;
 use App\Services\Api\LoginService;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\Api\Users\IndexRequest;
+use App\Http\Requests\Api\Users\LoginRequest;
 
 class LoginController extends ApiController
 {
 
-    public function loginApi(IndexRequest $request, LoginService $loginService)
+    public function loginApi(LoginRequest $request, LoginService $loginService)
     {
         $params = $request->only('email', 'password');
         return $this->doRequest(function () use ($loginService, $params) {
