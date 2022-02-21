@@ -6,7 +6,7 @@
 
 # Set up set in server docker:
 
-- docker exec -it hb_future_base_php_1 bash
+- docker exec -it team-1_php_1 bash
 - composer install
 - cp .env.example .env
 - php artisan config:clear
