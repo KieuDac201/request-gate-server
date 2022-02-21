@@ -37,12 +37,12 @@ class ForgotResetPasswordService extends AbstractService
             }
         );
         if ($status == Password::PASSWORD_RESET) {
-            return response([
+            return [
                 'message'=> 'Password reset successfully'
-            ]);
+            ];
         }
-        return response([
+        return [
             'message'=> __($status)
-        ], 500);
+        ];
     }
 }
