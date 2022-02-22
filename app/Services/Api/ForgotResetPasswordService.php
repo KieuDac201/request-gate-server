@@ -6,6 +6,7 @@ use App\Repositories\ForgotResetPasswordRepository;
 use App\Services\AbstractService;
 use App\Models\User;
 use Illuminate\Support\Facades\Password;
+use App\Exceptions\UnprocessableEntityException;
 
 class ForgotResetPasswordService extends AbstractService
 {
@@ -41,8 +42,6 @@ class ForgotResetPasswordService extends AbstractService
                 'message'=> 'Password reset successfully'
             ];
         }
-        return [
-            'message'=> __($status)
-        ];
+        throw new UnprocessableEntityException(__($status));
     }
 }

@@ -29,10 +29,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::group(['prefix' => 'users'], function () {
         Route::get('/', [UserController::class,'index']);
-        Route::get('/show/{id}', [UserController::class,'show']);
         Route::post('/store', [UserController::class,'store']);
         Route::put('/update/{user}', [UserController::class,'update']);
-        Route::delete('/delete/{user}', [UserController::class,'destroy']);
+        Route::post('/deactive/{user}', [UserController::class,'destroy']);
     });
 
     Route::group(['prefix' => 'roles'], function () {
