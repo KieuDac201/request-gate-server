@@ -31,7 +31,7 @@ class UserController extends ApiController
      */
     public function index(IndexRequest $request, UserServiceInterface $serviceService)
     {
-        $params = $request->all();
+        $params = $request->key;
         return $this->getData(function () use ($serviceService, $params) {
             return $serviceService->index($params);
         });
@@ -64,7 +64,6 @@ class UserController extends ApiController
     public function destroy(UserServiceInterface $serviceService, User $user)
     {
         return $this->doRequest(function () use ($serviceService, $user) {
-
             return $serviceService->destroy($user);
         });
     }

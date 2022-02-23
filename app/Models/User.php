@@ -19,7 +19,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'status', 'code'
     ];
 
     /**
@@ -43,7 +43,7 @@ class User extends Authenticatable
     public function sendPasswordResetNotification($token)
     {
 
-        $url = 'http://127.0.0.1:8000/api/forgot-password?token=' . $token;
+        $url = config('settings.webAppUrl') . '/reset-password?token=' . $token;
 
         $this->notify(new ResetPasswordNotification($url));
     }

@@ -29,12 +29,16 @@ class UserService extends AbstractService implements UserServiceInterface
      */
     public function index($params)
     {
-        return $this->userRepository->getColumns()->get();
+        return [
+            'data' => $this->userRepository->getList($params)
+        ];
     }
 
     public function find($params)
     {
-        return $this->userRepository->find($params);
+        return [
+            'data' => $this->userRepository->find($params)
+        ];
     }
 
     public function store($params)
@@ -52,6 +56,10 @@ class UserService extends AbstractService implements UserServiceInterface
 
     public function destroy(User $user)
     {
-        return $this->userRepository->destroy($user);
+        if ($this->userRepository->destroy($user)) {
+            return [
+                'message' => 'Success'
+            ];
+        }
     }
 }
