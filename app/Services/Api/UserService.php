@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Services\AbstractService;
 use GuzzleHttp\Psr7\Message;
 use Illuminate\Database\Eloquent\Builder;
+use App\Enums\RoleEnum;
 
 class UserService extends AbstractService implements UserServiceInterface
 {
@@ -45,50 +46,50 @@ class UserService extends AbstractService implements UserServiceInterface
 
     public function store($params)
     {
-        if ($params['role_id'] == 2) {
-            $user = User::where('role_id', '=', 2)
-            ->where('department_id', '=', $params['department_id'])->get();
-            if ($user->count()>0) {
+        if ($params['role_id'] == RoleEnum::ROLE_QUAN_LY_BO_PHAN) {
+            $user = User::where('role_id', '=', RoleEnum::ROLE_QUAN_LY_BO_PHAN)
+            ->where('department_id', '=', $params['department_id'])-> get();
+            if ($user->count() > 0) {
                 return [
                     'message'   => 'Da co 1 truong bo phan',
                 ];
             }
         }
 
-        if ($params['role_id'] == 1 && $params['department_id'] != 2) {
+        if ($params['role_id'] == RoleEnum::ROLE_ADMIN && $params['department_id'] != RoleEnum::ROLE_QUAN_LY_BO_PHAN) {
             return [
-                'message'   => 'Phong nay khong duoc them Admin',
+                'message' => 'Phong nay khong duoc them Admin',
             ];
         }
 
         return [
-            'message'=> 'them thanh cong',
+            'message' => 'them thanh cong',
             'data' => $this->userRepository->store($params)
         ];
     }
 
     public function update(User $user, $params)
     {
-        if ($params['role_id'] == 2) {
-            $user = User::where('role_id', '=', 2)
-            ->where('department_id', '=', $params['department_id'])->get();
+        if ($params['role_id'] == RoleEnum::ROLE_QUAN_LY_BO_PHAN) {
+            $checkuser = User::where('role_id', '=', RoleEnum::ROLE_QUAN_LY_BO_PHAN)
+            ->where('department_id', '=', $params['department_id'])->first();
 
-            if ($user->count()>0) {
+            if ($checkuser->count() > 0 && $checkuser->id != $user->id) {
                 return [
-                    'message'   => 'Da co 1 truong bo phan',
+                    'message' => 'Da co 1 truong bo phan',
                 ];
             }
         }
 
-        if ($params['role_id'] == 1 && $params['department_id'] != 2) {
+        if ($params['role_id'] == RoleEnum::ROLE_ADMIN && $params['department_id'] != 2) {
             return [
-                'message'   => 'Phong nay khong duoc them Admin',
+                'message' => 'Phong nay khong duoc them Admin',
             ];
         }
         
         return [
-            'message'=>'update thanh cong',
-            'data'  =>$this->userRepository->update($user, $params)
+            'message' => 'update thanh cong',
+            'data'  => $this->userRepository->update($user, $params)
         ];
     }
 

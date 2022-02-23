@@ -7,7 +7,12 @@ use App\Models\User;
 interface UserServiceInterface
 {
     public function index($params);
-    public function store($params);
-    public function update(User $user, $params);
-    public function destroy($params);
+
+    public function find($params);
+
+    public function store($id);
+
+    public function update(User $user, $id);
+
+    public function destroy(User $user);
 }

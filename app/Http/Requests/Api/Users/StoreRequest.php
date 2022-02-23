@@ -17,8 +17,9 @@ class StoreRequest extends ApiRequest
             'email'       => 'required|email',
             'password'    => 'required',
             'name'      => 'required|max:25',
-            'role_id'   => 'exists:roles,id',
-            'department_id' =>  'exists:departments,id',
+            'role_id'   => 'required|exists:roles,id',
+            'department_id' =>  'required|exists:departments,id',
+            'status'    =>  'required'
         ];
     }
 

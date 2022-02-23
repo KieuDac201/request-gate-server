@@ -14,10 +14,12 @@ class UpdateRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'email'       => 'email',
-            'name'      => 'max:25',
-            'role_id'   => 'exists:roles,id',
-            'department_id' =>  'exists:departments,id',
+            'email'       => 'required|email',
+            'password'    => 'required',
+            'name'      => 'required|max:25',
+            'role_id'   => 'required|exists:roles,id',
+            'department_id' =>  'required|exists:departments,id',
+            'status'    =>  'required'
         ];
     }
 

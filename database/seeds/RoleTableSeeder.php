@@ -17,6 +17,7 @@ class RoleTableSeeder extends Seeder
     public function run()
     {
         DB::table('roles')->truncate();
+
         DB::table('roles')->insert([
             ['name' => 'Admin'],
             ['name' => 'Quản lý bộ phận'],

@@ -40,7 +40,6 @@ abstract class BaseRepository implements BaseRepositoryInterface
      */
     public function store($data)
     {
-        // dd($data);
         return $this->model->create($data);
     }
 
