@@ -37,13 +37,6 @@ class UserController extends ApiController
         });
     }
 
-    public function show($id, UserServiceInterface $serviceService)
-    {
-        return $this->getData(function () use ($serviceService, $id) {
-            return $serviceService->find($id);
-        });
-    }
-
     public function store(StoreRequest $request, UserServiceInterface $serviceService)
     {
         $params = $request->all();

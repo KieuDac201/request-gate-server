@@ -6,6 +6,8 @@ use App\Contracts\Repositories\UserRepositoryInterface;
 use App\Contracts\Services\Api\UserServiceInterface;
 use App\Models\User;
 use App\Services\AbstractService;
+use GuzzleHttp\Psr7\Message;
+use Illuminate\Database\Eloquent\Builder;
 
 class UserService extends AbstractService implements UserServiceInterface
 {
@@ -43,15 +45,51 @@ class UserService extends AbstractService implements UserServiceInterface
 
     public function store($params)
     {
+        if ($params['role_id'] == 2) {
+            $user = User::where('role_id', '=', 2)
+            ->where('department_id', '=', $params['department_id'])->get();
+            if ($user->count()>0) {
+                return [
+                    'message'   => 'Da co 1 truong bo phan',
+                ];
+            }
+        }
+
+        if ($params['role_id'] == 1 && $params['department_id'] != 2) {
+            return [
+                'message'   => 'Phong nay khong duoc them Admin',
+            ];
+        }
+
         return [
-            'message'=>9,
+            'message'=> 'them thanh cong',
             'data' => $this->userRepository->store($params)
         ];
     }
 
     public function update(User $user, $params)
     {
-        return $this->userRepository->update($user, $params);
+        if ($params['role_id'] == 2) {
+            $user = User::where('role_id', '=', 2)
+            ->where('department_id', '=', $params['department_id'])->get();
+
+            if ($user->count()>0) {
+                return [
+                    'message'   => 'Da co 1 truong bo phan',
+                ];
+            }
+        }
+
+        if ($params['role_id'] == 1 && $params['department_id'] != 2) {
+            return [
+                'message'   => 'Phong nay khong duoc them Admin',
+            ];
+        }
+        
+        return [
+            'message'=>'update thanh cong',
+            'data'  =>$this->userRepository->update($user, $params)
+        ];
     }
 
     public function destroy(User $user)

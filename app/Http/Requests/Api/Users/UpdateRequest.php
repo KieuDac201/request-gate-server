@@ -14,9 +14,10 @@ class UpdateRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'email'       => 'required|email',
-            'password'       => 'required',
-            'name'      => 'required|max:25',
+            'email'       => 'email',
+            'name'      => 'max:25',
+            'role_id'   => 'exists:roles,id',
+            'department_id' =>  'exists:departments,id',
         ];
     }
 
@@ -28,9 +29,13 @@ class UpdateRequest extends ApiRequest
     public function messages(): array
     {
         return [
+            'name.max' =>   'Ten khong duoc qua 25 ky tu',
             'email.required' => 'A email is required',
             'password.required' => 'A password is required',
             'name.required' => 'A name is required',
+            'email.email'   =>  'Khong dung dinh dang',
+            'role_id.exists' => 'Role nay chua ton tai',
+            'department_id.exists' =>  'Phong ban nay chua ton tai'
         ];
     }
 
