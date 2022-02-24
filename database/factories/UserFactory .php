@@ -18,7 +18,7 @@ class UserFactory extends Factory
             'name' => $this->faker->name(),
             'code' => $this->faker->numerify('NV ###'),
             'status' => $this->faker->randomElement($array = array ('0','1')),
-            'department_id' => random_int(1, 10),
+            'department_id' => random_int(1, 5),
             'role_id' => random_int(1, 3),
             'email' => $this->faker->unique()->safeEmail(),
             'email_verified_at' => now(),

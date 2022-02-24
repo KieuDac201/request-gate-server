@@ -43,7 +43,7 @@ class UserController extends ApiController
             return $serviceService->find($id);
         });
     }
-
+    
     public function store(StoreRequest $request, UserServiceInterface $serviceService)
     {
         $params = $request->all();
