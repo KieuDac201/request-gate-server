@@ -6,6 +6,8 @@ use App\Contracts\Repositories\UserRepositoryInterface;
 use App\Repositories\UserRepository;
 use App\Contracts\Repositories\RoleRepositoryInterface;
 use App\Repositories\RoleRepository;
+use App\Contracts\Repositories\DepartmentRepositoryInterface;
+use App\Repositories\DepartmentRepository;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -18,6 +20,10 @@ class RepositoryServiceProvider extends ServiceProvider
         'role' => [
             RoleRepositoryInterface::class,
             RoleRepository::class,
+        ],
+        'department' => [
+            DepartmentRepositoryInterface::class,
+            DepartmentRepository::class,
         ],
     ];
 
