@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\ForgotResetPasswordController;
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\RoleController;
+use App\Http\Controllers\Api\DepartmentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,7 +34,12 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::put('/update/{user}', [UserController::class,'update']);
         Route::post('/deactive/{user}', [UserController::class,'destroy']);
     });
-
+    Route::group(['prefix' => 'departments'], function () {
+        Route::get('/', [DepartmentController::class,'index']);
+        Route::post('/store', [DepartmentController::class,'store']);
+        Route::put('/update/{department}', [DepartmentController::class,'update']);
+        Route::post('/deactive/{department}', [DepartmentController::class,'destroy']);
+    });
     Route::group(['prefix' => 'roles'], function () {
         Route::get('/', [RoleController::class, 'index']);
     });

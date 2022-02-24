@@ -6,6 +6,8 @@ use App\Contracts\Services\Api\UserServiceInterface;
 use App\Services\Api\UserService;
 use App\Contracts\Services\Api\RoleServiceInterface;
 use App\Services\Api\RoleService;
+use App\Contracts\Services\Api\DepartmentServiceInterface;
+use App\Services\Api\DepartmentService;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -25,6 +27,10 @@ class AppServiceProvider extends ServiceProvider
             [
                 RoleServiceInterface::class,
                 RoleService::class
+            ],
+            [
+                DepartmentServiceInterface::class,
+                DepartmentService::class
             ],
         ];
         foreach ($services as $service) {
