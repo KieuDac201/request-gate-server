@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Contracts\Services\Api\CategoryServiceInterface;
 use App\Contracts\Services\Api\UserServiceInterface;
+use App\Services\Api\CategoryService;
 use App\Services\Api\UserService;
 use App\Contracts\Services\Api\RoleServiceInterface;
 use App\Services\Api\RoleService;
@@ -31,6 +33,10 @@ class AppServiceProvider extends ServiceProvider
             [
                 DepartmentServiceInterface::class,
                 DepartmentService::class
+            ],
+            [
+                CategoryServiceInterface::class,
+                CategoryService::class
             ],
         ];
         foreach ($services as $service) {

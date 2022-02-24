@@ -56,4 +56,8 @@ class User extends Authenticatable
 
         $this->notify(new ResetPasswordNotification($url));
     }
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class, 'user_categories');
+    }
 }
