@@ -4,11 +4,15 @@ namespace App\Services\Api;
 
 use App\Contracts\Repositories\UserRepositoryInterface;
 use App\Contracts\Services\Api\UserServiceInterface;
+use App\Enums\DepartmentEnum;
 use App\Models\User;
 use App\Services\AbstractService;
 use GuzzleHttp\Psr7\Message;
 use Illuminate\Database\Eloquent\Builder;
 use App\Enums\RoleEnum;
+use App\Exceptions\QueryException;
+use App\Models\Department;
+use Illuminate\Support\Facades\Hash;
 
 class UserService extends AbstractService implements UserServiceInterface
 {
@@ -46,20 +50,24 @@ class UserService extends AbstractService implements UserServiceInterface
 
     public function store($params)
     {
+        $params['password'] = Hash::make($params['password']);
         if ($params['role_id'] == RoleEnum::ROLE_QUAN_LY_BO_PHAN) {
             $user = User::where('role_id', '=', RoleEnum::ROLE_QUAN_LY_BO_PHAN)
             ->where('department_id', '=', $params['department_id'])-> get();
             if ($user->count() > 0) {
-                return [
-                    'message'   => 'Da co 1 truong bo phan',
-                ];
+                throw new QueryException('Da co 1 truong bo phan');
             }
         }
 
-        if ($params['role_id'] == RoleEnum::ROLE_ADMIN && $params['department_id'] != RoleEnum::ROLE_QUAN_LY_BO_PHAN) {
-            return [
-                'message' => 'Phong nay khong duoc them Admin',
-            ];
+        if ($params['role_id'] == RoleEnum::ROLE_ADMIN && $params['department_id'] != DepartmentEnum::DEPARTMENT_HCNS) {
+            throw new QueryException('Phong nay khong duoc them Admin');
+        }
+
+        if ($params['email']) {
+            $checkemail = User::where('email', '=', $params['email'])->get();
+            if ($checkemail->count() > 0) {
+                throw new QueryException('Email nay da ton tai');
+            }
         }
 
         return [
@@ -75,16 +83,12 @@ class UserService extends AbstractService implements UserServiceInterface
             ->where('department_id', '=', $params['department_id'])->first();
 
             if ($checkuser->count() > 0 && $checkuser->id != $user->id) {
-                return [
-                    'message' => 'Da co 1 truong bo phan',
-                ];
+                throw new QueryException('Da co 1 truong bo phan');
             }
         }
 
         if ($params['role_id'] == RoleEnum::ROLE_ADMIN && $params['department_id'] != 2) {
-            return [
-                'message' => 'Phong nay khong duoc them Admin',
-            ];
+            throw new QueryException('Phong nay khong duoc them Admin');
         }
         
         return [

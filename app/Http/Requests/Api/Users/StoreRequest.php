@@ -15,6 +15,7 @@ class StoreRequest extends ApiRequest
     {
         return [
             'email'       => 'required|email',
+            'code'      => 'required',
             'password'    => 'required',
             'name'      => 'required|max:25',
             'role_id'   => 'required|exists:roles,id',
@@ -36,6 +37,7 @@ class StoreRequest extends ApiRequest
             'password.required' => 'A password is required',
             'name.required' => 'A name is required',
             'email.email'   =>  'Khong dung dinh dang',
+            'role_id.exists' => 'Email nay ton tai',
             'role_id.exists' => 'Role nay chua ton tai',
             'department_id.exists' =>  'Phong ban nay chua ton tai'
         ];
