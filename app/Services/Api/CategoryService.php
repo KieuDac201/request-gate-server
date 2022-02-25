@@ -61,4 +61,45 @@ class CategoryService extends AbstractService implements CategoryServiceInterfac
             }
         }
     }
+    public function update($data, $id)
+    {
+        if ($data) {
+            if ($data['name']) {
+                $checkName = Category::where('name', '=', $data['name'])->get();
+                if ($checkName->count()) {
+                    return [
+                        'message' => 'Da co category nay'
+                    ];
+                }
+                $userId = User::findOrFail($data['user_id']);
+                if ($userId->status = CategoryStatusEnum::CATEGORY_DEACTIVE_STATUS) {
+                    return [
+                        'message' => 'User chua duoc active',
+                    ];
+                } else {
+                    $cate = Category::find($id);
+                    $cate->name = $data['name'];
+                    $cate->status = $data['status'];
+                    $cate->save();
+                    $cate->users()->sync($data['user_id']);
+                    return [
+                        'message' => 'Sua category thanh cong'
+                    ];
+                }
+            } else {
+                return [
+                    'message' => 'Them category khong thanh cong'
+                ];
+            }
+        }
+    }
+    public function destroy($id)
+    {
+        $cate = Category::findOrFail($id);
+        $cate->delete();
+        $cate->users()->detach();
+        return [
+            'message' => 'Xoa category thanh cong'
+        ];
+    }
 }
