@@ -24,11 +24,13 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         $data = $this->model->join('departments', 'department_id', '=', 'departments.id')
             ->join('roles', 'role_id', '=', 'roles.id')
             ->select(
-                'users.id as user_id',
-                'users.name as user_name',
-                'code as MaNV',
+                'users.id as id',
+                'users.name as name',
+                'code',
                 'departments.name as department_name',
+                'departments.id as department_id',
                 'roles.name as role_name',
+                'roles.id as role_id',
                 'users.status'
             );
         if (isset($param)) {
