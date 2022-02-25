@@ -8,7 +8,5 @@ interface CategoryServiceInterface
 {
     public function index($params);
     public function store($params);
-    public function search($key);
-    public function update($data, $id);
-    public function destroy($id);
+    public function update(Category $category, $id);
 }

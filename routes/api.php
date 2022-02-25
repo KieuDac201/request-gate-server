@@ -45,10 +45,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     });
     Route::group(['prefix' => 'categories'], function () {
         Route::get('/',[CategoryController::class,'index']);
-        Route::get('/search',[CategoryController::class,'search']);
         Route::post('/store',[CategoryController::class,'store']);
         Route::put('/update/{category}',[CategoryController::class,'update']);
-        Route::delete('/delete/{id}',[CategoryController::class,'destroy']);
     });
 });
 

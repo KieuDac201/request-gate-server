@@ -16,7 +16,7 @@ class UpdateRequest extends ApiRequest
         return [
             'name'       => 'required',
             'status'     => 'required',
-            'user_id'    => 'required'
+            'user_id'    => 'required|exists:users,id'
         ];
     }
 
@@ -31,6 +31,7 @@ class UpdateRequest extends ApiRequest
             'name.required' => 'A name is required',
             'status.required' => 'A status is required',
             'user_id.required' => 'A assignee is required',
+            'user_id.exists' => 'A assignee is not exists',
         ];
     }
 
