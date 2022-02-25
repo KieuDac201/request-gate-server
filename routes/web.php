@@ -11,6 +11,8 @@
 |
 */
 
+use Illuminate\Database\Eloquent\Model;
+
 Route::get('/', function () {
     return view('welcome');
 });

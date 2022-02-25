@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\DepartmentController;
+use App\Http\Controllers\Api\CategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,7 +28,6 @@ Route::post('login', [LoginController::class, 'loginApi']);
 //api need logged in
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('logout', [LoginController::class, 'logoutApi']);
-
     Route::group(['prefix' => 'users'], function () {
         Route::get('/', [UserController::class,'index']);
         Route::post('/store', [UserController::class,'store']);
@@ -43,4 +43,12 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::group(['prefix' => 'roles'], function () {
         Route::get('/', [RoleController::class, 'index']);
     });
+    Route::group(['prefix' => 'categories'], function () {
+        Route::get('/',[CategoryController::class,'index']);
+        Route::get('/search',[CategoryController::class,'search']);
+        Route::post('/store',[CategoryController::class,'store']);
+    });
 });
+
+
+

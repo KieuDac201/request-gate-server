@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Contracts\Repositories\CategoryRepositoryInterface;
 use App\Contracts\Repositories\UserRepositoryInterface;
+use App\Repositories\CategoryRepository;
 use App\Repositories\UserRepository;
 use App\Contracts\Repositories\RoleRepositoryInterface;
 use App\Repositories\RoleRepository;
@@ -25,6 +27,10 @@ class RepositoryServiceProvider extends ServiceProvider
             DepartmentRepositoryInterface::class,
             DepartmentRepository::class,
         ],
+        'category'=>[
+            CategoryRepositoryInterface::class,
+            CategoryRepository::class,
+        ]
     ];
 
     /**
