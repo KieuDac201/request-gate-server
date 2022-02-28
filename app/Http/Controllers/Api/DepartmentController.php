@@ -48,11 +48,4 @@ class DepartmentController extends ApiController
             return $serviceService->update($department, $params);
         });
     }
-
-    public function destroy(DepartmentServiceInterface $serviceService, Department $department)
-    {
-        return $this->doRequest(function () use ($serviceService, $department) {
-            return $serviceService->destroy($department);
-        });
-    }
 }

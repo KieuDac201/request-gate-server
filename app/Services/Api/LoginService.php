@@ -14,7 +14,6 @@ class LoginService extends AbstractService
             throw new CheckAuthenticationException();
         }
             $user = User::where('email', $params['email'])->firstOrFail();
-
             $token = $user->createToken('auth_token')->plainTextToken;
 
             return ([
