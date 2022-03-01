@@ -25,13 +25,17 @@ class DepartmentRepository extends BaseRepository implements DepartmentRepositor
         return $data->get();
     }
 
-    public function destroy(Model $model)
+    public function update(Model $model, array $params)
     {
-        $countUser = DB::table('users')->where('department_id', $model->id)->count();
-        if ($countUser == 0) {
-            return $model->update(['status' => DepartmentStatusEnum::DEPARMENT_DEACTIVE_STATUS]);
+        if ($params['status'] == DepartmentStatusEnum::DEPARMENT_DEACTIVE_STATUS) {
+            $countUser = DB::table('users')->where('department_id', $model->id)->count();
+            if ($countUser == 0) {
+                return  $model->update($params);
+            } else {
+                throw new QueryException('The department has members,cant be deactive');
+            }
         } else {
-            throw new QueryException('The department has members,cant be deactive');
+            return  $model->update($params);
         }
     }
 }

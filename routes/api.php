@@ -38,7 +38,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('/', [DepartmentController::class,'index']);
         Route::post('/store', [DepartmentController::class,'store']);
         Route::put('/update/{department}', [DepartmentController::class,'update']);
-        Route::post('/deactive/{department}', [DepartmentController::class,'destroy']);
     });
     Route::group(['prefix' => 'roles'], function () {
         Route::get('/', [RoleController::class, 'index']);
@@ -51,6 +50,3 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::delete('/delete/{id}',[CategoryController::class,'destroy']);
     });
 });
-
-
-

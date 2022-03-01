@@ -50,10 +50,6 @@ class DepartmentService extends AbstractService implements DepartmentServiceInte
 
     public function destroy(Department $department)
     {
-        if ($this->departmentRepository->destroy($department)) {
-            return [
-                'message' => 'Success'
-            ];
-        }
+        //
     }
 }
