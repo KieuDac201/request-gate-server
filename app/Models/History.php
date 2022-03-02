@@ -5,15 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Request extends Model
+class History extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'name', 'content', 'priority', 'status', 'author_id', 'category_id',
-        'person_in_charge'
+        'request_id', 'user_id', 'content', 'type'
     ];
 
     protected $primaryKey = 'id';
 
-    protected $table = 'requests';
+    protected $table = 'histories';
 }
