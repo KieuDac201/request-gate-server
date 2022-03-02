@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Contracts\Repositories\CategoryRepositoryInterface;
 use App\Models\Category;
+use App\Models\User;
 
 class CategoryRepository extends BaseRepository implements CategoryRepositoryInterface
 {
@@ -11,17 +12,24 @@ class CategoryRepository extends BaseRepository implements CategoryRepositoryInt
     {
         parent::__construct($category);
     }
-    public function search($key)
-    {
-        $query = Category::query();
-        $params = $query->with('users:id,name,email')
-            ->where('name', 'like', '%'.$key.'%')
-            ->select('id', 'name', 'status')->get();
-        return $params;
-    }
     public function getList($params)
     {
-        $params = Category::with('users:id,name,email')->select('id', 'name', 'status')->get();
-        return $params;
+        $query = Category::with('users:id,name')->select('id', 'name', 'status');
+        if (isset($params)) {
+            $query->where('name', 'like', '%'.$params.'%');
+        }
+        $data = $query->get();
+        return $data;
+    }
+    public function showNameUser($params)
+    {
+        $users = User::find($params);
+        foreach ($users as $data) {
+            $user[] = [
+                    "id"=>$data->id,
+                    "name"=>$data->name
+                ] ;
+        }
+        return $user ;
     }
 }
