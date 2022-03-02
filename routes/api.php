@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\DepartmentController;
 use App\Http\Controllers\Api\RequestController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\HistoryController;
+use App\Http\Controllers\Api\CommentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -63,5 +64,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::group(['prefix' => 'histories'], function () {
         Route::get('/{id}',[HistoryController::class,'index']);
         Route::get('/', [HistoryController::class, 'getList']);
+    });
+    Route::group(['prefix' => 'requests'], function () {
+        Route::post('/store', [RequestController::class,'store']);
+        Route::put('/update/{request}', [RequestController::class,'update']);
     });
 });
