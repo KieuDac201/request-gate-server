@@ -32,4 +32,9 @@ class CategoryRepository extends BaseRepository implements CategoryRepositoryInt
         }
         return $user ;
     }
+    public function find($id, $columns = ['*'])
+    {
+        $category = $this->model->findOrFail($id, $columns);
+        return $category->load(['users:id,name']);
+    }
 }

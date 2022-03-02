@@ -84,4 +84,11 @@ class CategoryService extends AbstractService implements CategoryServiceInterfac
             }
         }
     }
+
+    public function find($params)
+    {
+        return [
+            'data' => $this->categoryRepository->find($params),
+        ];
+    }
 }
