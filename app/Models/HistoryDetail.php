@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Enums\HistoryTypeEnum;
 
 class HistoryDetail extends Model
 {
@@ -15,4 +16,9 @@ class HistoryDetail extends Model
     protected $primaryKey = 'id';
 
     protected $table = 'history_details';
+
+    public function history0()
+    {
+        return $this->belongsTo('App\Models\History');
+    }
 }

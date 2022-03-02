@@ -26,9 +26,9 @@ class HistoryTableSeeder extends Seeder
             History::truncate();
             HistoryDetail::truncate();
             $requests = Request::all();
-            $fieldValues = ['name', 'content'];
-            $fieldInt = ['person_in_charge', 'category_id'];
-            $statusValues = ['2', '3'];
+            $fieldValues = ['Name', 'Content'];
+            $categoryValues = ['Team 1', 'Team 3', 'Team 2', 'Team 4'];
+            $statusValues = ['In Progress', 'Closed'];
             foreach ($requests as $request) {
                 History::create([
                     'request_id' => $request->id,
@@ -56,15 +56,15 @@ class HistoryTableSeeder extends Seeder
                 ]);
                 HistoryDetail::create([
                     'history_id' => $history->id,
-                    'change_field' => 'status',
-                    'old_value' => 1,
+                    'change_field' => 'Status',
+                    'old_value' => 'Open',
                     'new_value' => $statusValues[rand(0,1)],
                 ]);
                 HistoryDetail::create([
                     'history_id' => $history->id,
-                    'change_field' => $fieldInt[rand(0,1)],
-                    'old_value' => random_int(1, 10),
-                    'new_value' => random_int(1, 10),
+                    'change_field' => 'Category',
+                    'old_value' => 'Team 0',
+                    'new_value' => $categoryValues[rand(0,3)],
                 ]);
             }
             DB::commit();

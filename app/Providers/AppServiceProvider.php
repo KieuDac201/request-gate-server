@@ -13,6 +13,8 @@ use App\Services\Api\DepartmentService;
 use App\Contracts\Services\Api\RequestServiceInterface;
 use App\Services\Api\RequestService;
 use Illuminate\Support\ServiceProvider;
+use App\Contracts\Services\Api\CommentServiceInterface;
+use App\Services\Api\CommentService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -43,6 +45,10 @@ class AppServiceProvider extends ServiceProvider
             [
                 RequestServiceInterface::class,
                 RequestService::class
+            ],
+            [
+                CommentServiceInterface::class,
+                CommentService::class
             ],
         ];
         foreach ($services as $service) {

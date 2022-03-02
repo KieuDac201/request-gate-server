@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\DepartmentController;
 use App\Http\Controllers\Api\RequestController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\CommentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,5 +53,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     });
     Route::group(['prefix' => 'requests'], function () {
         Route::get('/', [RequestController::class,'index']);
+    });
+    Route::group(['prefix' => 'comments'], function () {
+        Route::get('/{id}',[CommentController::class,'index']);
     });
 });

@@ -13,6 +13,8 @@ use App\Repositories\DepartmentRepository;
 use App\Contracts\Repositories\RequestRepositoryInterface;
 use App\Repositories\RequestRepository;
 use Illuminate\Support\ServiceProvider;
+use App\Contracts\Repositories\CommentRepositoryInterface;
+use App\Repositories\CommentRepository;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -36,6 +38,10 @@ class RepositoryServiceProvider extends ServiceProvider
         'request'=>[
             RequestRepositoryInterface::class,
             RequestRepository::class,
+        ],
+        'comment'=>[
+            CommentRepositoryInterface::class,
+            CommentRepository::class,
         ]
     ];
 

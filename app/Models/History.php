@@ -15,4 +15,9 @@ class History extends Model
     protected $primaryKey = 'id';
 
     protected $table = 'histories';
+
+    public function historyDetail()
+    {
+        return $this->hasMany('App\Models\HistoryDetail');
+    }
 }
