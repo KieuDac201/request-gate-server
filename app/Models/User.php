@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\RoleEnum;
+use App\Enums\UserStatusEnum;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
