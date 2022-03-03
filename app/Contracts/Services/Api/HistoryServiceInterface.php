@@ -2,7 +2,7 @@
 
 namespace App\Contracts\Services\Api;
 
-interface CommentServiceInterface
+interface HistoryServiceInterface
 {
     public function index($params, $id);
 }
