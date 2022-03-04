@@ -78,7 +78,7 @@ class CategoryService extends AbstractService implements CategoryServiceInterfac
                         'id' => $key->id,
                         'name' => $key->name,
                         'status' => $key->status,
-                        'user' => $this->categoryRepository->showNameUser($params['user_id'])
+                        'users' => $this->categoryRepository->showNameUser($params['user_id'])
                     ]
                 ];
             }

@@ -28,23 +28,25 @@ Route::post('login', [LoginController::class, 'loginApi']);
 //api need logged in
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('logout', [LoginController::class, 'logoutApi']);
-    Route::group(['prefix' => 'users'], function () {
-        Route::get('/', [UserController::class,'index']);
-        Route::post('/store', [UserController::class,'store']);
-        Route::put('/update/{user}', [UserController::class,'update']);
-        Route::post('/deactive/{user}', [UserController::class,'destroy']);
-    });
-    Route::group(['prefix' => 'departments'], function () {
-        Route::get('/', [DepartmentController::class,'index']);
-        Route::post('/store', [DepartmentController::class,'store']);
-        Route::put('/update/{department}', [DepartmentController::class,'update']);
-    });
-    Route::group(['prefix' => 'roles'], function () {
-        Route::get('/', [RoleController::class, 'index']);
-    });
-    Route::group(['prefix' => 'categories'], function () {
-        Route::get('/',[CategoryController::class,'index']);
-        Route::post('/store',[CategoryController::class,'store']);
-        Route::put('/update/{category}',[CategoryController::class,'update']);
+    Route::group(['middleware' => ['role:admin']], function () {
+        Route::group(['prefix' => 'users'], function () {
+            Route::get('/', [UserController::class,'index']);
+            Route::post('/store', [UserController::class,'store']);
+            Route::put('/update/{user}', [UserController::class,'update']);
+            Route::post('/deactive/{user}', [UserController::class,'destroy']);
+        });
+        Route::group(['prefix' => 'departments'], function () {
+            Route::get('/', [DepartmentController::class,'index']);
+            Route::post('/store', [DepartmentController::class,'store']);
+            Route::put('/update/{department}', [DepartmentController::class,'update']);
+        });
+        Route::group(['prefix' => 'roles'], function () {
+            Route::get('/', [RoleController::class, 'index']);
+        });
+        Route::group(['prefix' => 'categories'], function () {
+            Route::get('/',[CategoryController::class,'index'])->middleware('role:admin');
+            Route::post('/store',[CategoryController::class,'store']);
+            Route::put('/update/{category}',[CategoryController::class,'update']);
+        });
     });
 });
