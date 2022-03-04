@@ -10,6 +10,8 @@ use App\Contracts\Repositories\RoleRepositoryInterface;
 use App\Repositories\RoleRepository;
 use App\Contracts\Repositories\DepartmentRepositoryInterface;
 use App\Repositories\DepartmentRepository;
+use App\Contracts\Repositories\RequestRepositoryInterface;
+use App\Repositories\RequestRepository;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -30,6 +32,10 @@ class RepositoryServiceProvider extends ServiceProvider
         'category'=>[
             CategoryRepositoryInterface::class,
             CategoryRepository::class,
+        ],
+        'request'=>[
+            RequestRepositoryInterface::class,
+            RequestRepository::class,
         ]
     ];
 

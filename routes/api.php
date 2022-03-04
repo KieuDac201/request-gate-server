@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\DepartmentController;
+use App\Http\Controllers\Api\RequestController;
 use App\Http\Controllers\Api\CategoryController;
 
 /*
@@ -48,5 +49,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
             Route::post('/store',[CategoryController::class,'store']);
             Route::put('/update/{category}',[CategoryController::class,'update']);
         });
+    });
+    Route::group(['prefix' => 'requests'], function () {
+        Route::get('/', [RequestController::class,'index']);
     });
 });
