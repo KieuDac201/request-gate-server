@@ -40,30 +40,28 @@ class RequestRepository extends BaseRepository implements RequestRepositoryInter
         if (isset($params['myRequest'])) {
             $idUser = Auth::id();
             $data->where('requests.author_id', '=', $idUser);
-            return $data;
-        } else {
-            if (isset($params['name_request'])) {
-                $data->where('requests.name', 'like', '%'.$params['name_request'].'%');
-            }
-            if (isset($params['content'])) {
-                $data->where('requests.content', 'like', '%'.$params['content'].'%');
-            }
-            if (isset($params['status'])) {
-                $data->where('requests.status', '=', $params['status']);
-            }
-            if (isset($params['author'])) {
-                $data->where('requests.author_id', '=', $params['author']);
-            }
-            if (isset($params['assign'])) {
-                $data->where('requests.person_in_charge', '=', $params['assign']);
-            }
-            if (isset($params['category'])) {
-                $data->where('requests.category_id', '=', $params['category']);
-            }
-            if (isset($params['date_create'])) {
-                $data->whereDate('requests.created_at', '=', $params['date_create']);
-            }
-            return $data;
         }
+        if (isset($params['name_request'])) {
+            $data->where('requests.name', 'like', '%'.$params['name_request'].'%');
+        }
+        if (isset($params['content'])) {
+            $data->where('requests.content', 'like', '%'.$params['content'].'%');
+        }
+        if (isset($params['status'])) {
+            $data->where('requests.status', '=', $params['status']);
+        }
+        if (isset($params['author'])) {
+            $data->where('requests.author_id', '=', $params['author']);
+        }
+        if (isset($params['assign'])) {
+            $data->where('requests.person_in_charge', '=', $params['assign']);
+        }
+        if (isset($params['category'])) {
+            $data->where('requests.category_id', '=', $params['category']);
+        }
+        if (isset($params['date_create'])) {
+            $data->whereDate('requests.created_at', '=', $params['date_create']);
+        }
+        return $data;
     }
 }
