@@ -30,7 +30,6 @@ Route::post('login', [LoginController::class, 'loginApi']);
 //api need logged in
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('logout', [LoginController::class, 'logoutApi']);
-    Route::group(['middleware' => ['role:admin']], function () {
         Route::group(['prefix' => 'users'], function () {
             Route::get('/', [UserController::class,'index']);
             Route::post('/store', [UserController::class,'store']);
@@ -46,12 +45,11 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
             Route::get('/', [RoleController::class, 'index']);
         });
         Route::group(['prefix' => 'categories'], function () {
-            Route::get('/',[CategoryController::class,'index'])->middleware('role:admin');
-            Route::get('/get-list-pic /{category}',[CategoryController::class,'getListPersonInCharge']);
+            Route::get('/',[CategoryController::class,'index']);
+            Route::get('/get-list-pic/{category}',[CategoryController::class,'getListPersonInCharge']);
             Route::post('/store',[CategoryController::class,'store']);
             Route::put('/update/{category}',[CategoryController::class,'update']);
         });
-    });
     Route::group(['prefix' => 'requests'], function () {
         Route::get('/', [RequestController::class,'index']);
         Route::post('/store', [RequestController::class,'store']);
