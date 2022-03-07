@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Contracts\Services\Api\RequestServiceInterface;
 use App\Http\Requests\Api\Request\StoreRequest;
 use App\Http\Requests\Api\Request\UpdateRequest;
+use App\Http\Requests\Api\Users\IndexRequest;
+use App\Contracts\Services\Api\RequestServiceInterface;
 use App\Models\Request;
 
 class RequestController extends ApiController
@@ -14,7 +15,7 @@ class RequestController extends ApiController
         parent::__construct();
     }
 
-    public function index(Request $request, RequestServiceInterface $serviceService)
+    public function index(IndexRequest $request, RequestServiceInterface $serviceService)
     {
         $params = $request->all();
         return $this->getData(function () use ($serviceService, $params) {
@@ -42,6 +43,13 @@ class RequestController extends ApiController
     {
         return $this->getData(function () use ($serviceService, $id) {
             return $serviceService->detail($id);
+        });
+    }
+    public function action($id, RequestServiceInterface $serviceService, IndexRequest $input)
+    {
+        $params = $input->type;
+        return $this->doRequest(function () use ($serviceService, $id, $params) {
+            return $serviceService->action($id, $params);
         });
     }
 }

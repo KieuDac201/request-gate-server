@@ -10,6 +10,8 @@ use App\Exceptions\QueryException;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Pagination\Paginator;
+use App\Enums\RequestStatusEnum;
+use App\Enums\RoleEnum;
 
 class RequestRepository extends BaseRepository implements RequestRepositoryInterface
 {
@@ -88,5 +90,25 @@ class RequestRepository extends BaseRepository implements RequestRepositoryInter
             ];
         }
         return $data;
+    }
+    public function getDivisionManager($id)
+    {
+        $userRequest = User::join('requests', 'requests.author_id', '=', 'users.id')
+        ->where('requests.id', '=', $id)
+        ->first();
+        $userTBP = User::where('users.department_id', $userRequest->department_id)
+        ->where('users.role_id', RoleEnum::ROLE_QUAN_LY_BO_PHAN)
+        ->select('users.id as id')
+        ->first();
+        return $userTBP;
+    }
+    public function approve(Model $model)
+    {
+        return $model->update(['status' => RequestStatusEnum::REQUEST_STATUS_IN_PROGRESS]);
+    }
+
+    public function reject(Model $model)
+    {
+        return $model->update(['status' => RequestStatusEnum::REQUEST_STATUS_CLOSE]);
     }
 }
