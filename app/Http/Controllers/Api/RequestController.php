@@ -22,7 +22,6 @@ class RequestController extends ApiController
         });
     }
 
-
     public function store(StoreRequest $request, RequestServiceInterface $serviceService)
     {
         $params = $request->all();
@@ -37,6 +36,12 @@ class RequestController extends ApiController
         return $this->doRequest(function () use ($serviceService, $request, $params) {
 
             return $serviceService->update($request, $params);
+        });
+    }
+    public function detail(RequestServiceInterface $serviceService, $id)
+    {
+        return $this->getData(function () use ($serviceService, $id) {
+            return $serviceService->detail($id);
         });
     }
 }
