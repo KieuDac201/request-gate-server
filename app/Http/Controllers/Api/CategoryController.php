@@ -21,6 +21,14 @@ class CategoryController extends ApiController
             return $serviceService->index($params);
         });
     }
+
+    public function getListPersonInCharge($id, CategoryServiceInterface $serviceService)
+    {
+        return $this->getData(function () use ($serviceService, $id) {
+            return $serviceService->find($id);
+        });
+    }
+    
     public function store(StoreRequest $request, CategoryServiceInterface $serviceService)
     {
         $params = $request->all();

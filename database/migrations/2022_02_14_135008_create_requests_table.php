@@ -22,6 +22,7 @@ class CreateRequestsTable extends Migration
             $table->integer('author_id');
             $table->integer('person_in_charge');
             $table->integer('category_id');
+            $table->date('due_date');
             $table->timestamps();
             $table->softDeletes();
         });

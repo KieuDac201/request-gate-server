@@ -9,4 +9,5 @@ interface CategoryServiceInterface
     public function index($params);
     public function store($params);
     public function update(Category $category, $id);
+    public function find($params);
 }
