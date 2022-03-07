@@ -34,4 +34,12 @@ class Request extends Model
     {
         return $this->belongsTo(User::class, 'author_id', 'id');
     }
+    public function assigneeby()
+    {
+        return $this->belongsTo(User::class, 'person_in_charge', 'id');
+    }
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id', 'id');
+    }
 }
