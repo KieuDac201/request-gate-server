@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Contracts\Repositories\RequestRepositoryInterface;
+use App\Exceptions\NotFoundException;
 use App\Models\Request;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -66,27 +67,29 @@ class RequestRepository extends BaseRepository implements RequestRepositoryInter
     }
     public function detail($id)
     {
-        $request = Request::findOrFail($id);
-        if ($request) {
-            $nameAuthor = Request::with('createby')->first();
-            $namePersonInCharge = Request::with('assigneeby')->first();
-            $nameCategory = Request::with('category')->first();
-            $data = [
-                'id' => $request->id,
-                'name' => $request->name,
-                'priority' => $request->priority,
-                'status' => $request->status,
-                'author_id' => $request->author_id,
-                'author_name' => $nameAuthor->createby->name,
-                'category_id' => $request->category_id,
-                'category_name' => $nameCategory->category->name,
-                'person_in_charge' => $request->person_in_charge,
-                'person_in_charge_name' => $namePersonInCharge->assigneeby->name,
-                'created_at' => $request->created_at,
-                'updated_at' => $request->updated_at,
-                'due_date' => $request->due_date
-            ];
+        $request = Request::find($id);
+        if (!$request) {
+            throw new NotFoundException('Request does not exist or has been deleted');
         }
+        $request = Request::with(['createBy', 'assigneeBy', 'category'])->where('id', '=', $request->id)->first();
+        $nameAuthor = $request->createby->name;
+        $namePersonInCharge = $request->assigneeby->name;
+        $nameCategory = $request->category->name;
+        $data = [
+            'id' => $request->id,
+            'name' => $request->name,
+            'priority' => $request->priority,
+            'status' => $request->status,
+            'author_id' => $request->author_id,
+            'author_name' => $nameAuthor,
+            'category_id' => $request->category_id,
+            'category_name' => $nameCategory,
+            'person_in_charge' => $request->person_in_charge,
+            'person_in_charge_name' => $namePersonInCharge,
+            'created_at' => $request->created_at,
+            'updated_at' => $request->updated_at,
+            'due_date' => $request->due_date
+        ];
         return $data;
     }
 }
