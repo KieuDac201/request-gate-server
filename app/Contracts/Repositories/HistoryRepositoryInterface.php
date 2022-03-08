@@ -2,7 +2,7 @@
 
 namespace App\Contracts\Repositories;
 
-interface CommentRepositoryInterface extends BaseRepositoryInterface
+interface HistoryRepositoryInterface extends BaseRepositoryInterface
 {
     public function getList($params, $id);
 }

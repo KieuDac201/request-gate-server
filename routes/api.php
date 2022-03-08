@@ -9,7 +9,7 @@ use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\DepartmentController;
 use App\Http\Controllers\Api\RequestController;
 use App\Http\Controllers\Api\CategoryController;
-use App\Http\Controllers\Api\CommentController;
+use App\Http\Controllers\Api\HistoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -61,7 +61,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::put('/update/{request}', [RequestController::class,'update']);
         Route::get('/detail/{request}', [RequestController::class, 'detail']);
     });
-    Route::group(['prefix' => 'comments'], function () {
-        Route::get('/{id}',[CommentController::class,'index']);
+    Route::group(['prefix' => 'histories'], function () {
+        Route::get('/{id}',[HistoryController::class,'index']);
+        Route::get('/', [HistoryController::class, 'getList']);
     });
 });
