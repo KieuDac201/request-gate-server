@@ -94,13 +94,9 @@ class RequestService extends AbstractService implements RequestServiceInterface
     }
     public function detail($id)
     {
-        if (!isset($id)) {
-            throw new NotFoundException('Request does not exist or has been deleted');
-        } else {
-            $data = $this->requestRepository->detail($id);
-            return [
-                'data' => $data
-            ];
-        }
+        $data = $this->requestRepository->detail($id);
+        return [
+            'data' => $data
+        ];
     }
 }
