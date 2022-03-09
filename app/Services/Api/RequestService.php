@@ -15,6 +15,7 @@ use App\Models\User;
 use App\Services\AbstractService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Exceptions\CheckAuthorizationException;
 
 class RequestService extends AbstractService implements RequestServiceInterface
 {
@@ -98,5 +99,45 @@ class RequestService extends AbstractService implements RequestServiceInterface
         return [
             'data' => $data
         ];
+    }
+
+    public function action($id, $params)
+    {
+        $request = DB::table('requests')->where('id', $id)->first();
+        if (!isset($request)) {
+            throw new NotFoundException('request does not exist');
+        }
+
+        $user = Auth::user();
+        $userTBP = $this->requestRepository->getDivisionManager($request->id);
+        $idTPB = $userTBP->id;
+        $isAdmin = ($user->role_id == RoleEnum::ROLE_ADMIN) ? true : false;
+        $isTPB = ($user->id == $idTPB) ? true : false;
+
+        if ($params == "approve") {
+            if (!$isAdmin && !$isTPB) {
+                throw new CheckAuthorizationException('You do not have permission to approve');
+            }
+            if ($request->status != RequestStatusEnum::REQUEST_STATUS_OPEN) {
+                throw new QueryException('This request is not open');
+            }
+            return [
+                $this->requestRepository->approve($request),
+                'message' => 'Success'
+                ];
+        }
+        if ($params == "reject") {
+            if (!$isTPB) {
+                throw new CheckAuthorizationException('You do not have permission to approve');
+            }
+            if (!in_array($request->status, [RequestStatusEnum::REQUEST_STATUS_OPEN,
+                                             RequestStatusEnum::REQUEST_STATUS_IN_PROGRESS])) {
+                throw new QueryException('This request is not open or in progress');
+            }
+            return [
+                $this->requestRepository->reject($request),
+                'message' => 'Success'
+            ];
+        }
     }
 }

@@ -57,6 +57,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('/store', [RequestController::class,'store']);
         Route::put('/update/{request}', [RequestController::class,'update']);
         Route::get('/detail/{request}', [RequestController::class, 'detail']);
+        Route::post('/action/{id}', [RequestController::class,'action']);
     });
     Route::group(['prefix' => 'histories'], function () {
         Route::get('/{id}',[HistoryController::class,'index']);
