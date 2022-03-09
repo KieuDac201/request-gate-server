@@ -10,4 +10,5 @@ interface RequestServiceInterface
     public function store($id);
     public function update(Request $request, $id);
     public function detail($id);
+    public function destroy(Request $request);
 }

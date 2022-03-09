@@ -80,6 +80,7 @@ class RequestRepository extends BaseRepository implements RequestRepositoryInter
         $data = [
             'id' => $request->id,
             'name' => $request->name,
+            'content' => $request->content,
             'priority' => $request->priority,
             'status' => $request->status,
             'author_id' => $request->author_id,

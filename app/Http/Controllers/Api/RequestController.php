@@ -52,4 +52,10 @@ class RequestController extends ApiController
             return $serviceService->action($id, $params);
         });
     }
+    public function destroy(RequestServiceInterface $serviceService, Request $request)
+    {
+        return $this->doRequest(function () use ($serviceService, $request) {
+            return $serviceService->destroy($request);
+        });
+    }
 }
