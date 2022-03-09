@@ -18,17 +18,17 @@ class Request extends Model
 
     protected $table = 'requests';
 
-    protected static function boot()
-    {
-        parent::boot();
+    // protected static function boot()
+    // {
+    //     parent::boot();
 
-        $userId =Auth::user()->id;
-        static::creating(function ($model) use ($userId) {
-            if (!$model->isDirty('author_id')) {
-                $model->author_id = $userId;
-            }
-        });
-    }
+    //     $userId =Auth::user()->id;
+    //     static::creating(function ($model) use ($userId) {
+    //         if (!$model->isDirty('author_id')) {
+    //             $model->author_id = $userId;
+    //         }
+    //     });
+    // }
 
     public function createby()
     {

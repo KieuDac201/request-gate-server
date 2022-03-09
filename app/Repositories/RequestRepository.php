@@ -79,6 +79,7 @@ class RequestRepository extends BaseRepository implements RequestRepositoryInter
             'id' => $request->id,
             'name' => $request->name,
             'priority' => $request->priority,
+            'content' => $request->content,
             'status' => $request->status,
             'author_id' => $request->author_id,
             'author_name' => $nameAuthor,

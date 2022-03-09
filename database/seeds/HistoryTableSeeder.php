@@ -21,7 +21,7 @@ class HistoryTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::beginTransaction();
+        // DB::beginTransaction();
         try {
             History::truncate();
             HistoryDetail::truncate();
