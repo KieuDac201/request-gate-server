@@ -1,6 +1,6 @@
 stages:
   - CheckPhpcs
-  - Deploy
+  - DeployDev
 
 .PhpcsScan: &PhpcsScan |
   pushComment(){
@@ -23,3 +23,22 @@ Phpcs:
     - mv phpcs.phar /usr/local/bin/phpcs && chmod +x /usr/local/bin/phpcs
     - mv phpcbf.phar /usr/local/bin/phpcbf && chmod +x /usr/local/bin/phpcbf
     - *PhpcsScan
+
+DeployDev:
+  stage: DeployDev
+  image: hblabvn/php-mongo:latest
+  only:
+  - develop@lnd-training/hb-future-02/mock-project/back-end/team-1
+  environment:
+    name: dev
+  script:
+  - eval $(ssh-agent -s) && echo "$DEV_DEPLOY_KEY" | ssh-add -
+  - mkdir -p ~/.ssh
+  - 'echo -e "Host *\n\tStrictHostKeyChecking no\n\tControlMaster auto\n\tControlPath /tmp/ansible-%r@%h:%p\n\tControlPersist 15m\n\tPreferredAuthentications publickey
+  \n\n" > ~/.ssh/config'
+  - chmod go-wrx ~/.ssh
+  - composer global require hirak/prestissimo -q
+  - composer install --ignore-platform-reqs --no-scripts -q && composer dump-autoload -q
+  - echo "$DEV_DEPLOY_ENV_FILE" > .env && echo "OK" > public/health.html
+  - rsync -azPq --exclude='.git' ./ $DEV_DEPLOY_USER@$DEV_DEPLOY_HOST:$DEV_DEPLOY_DIR/
+  - ssh $DEV_DEPLOY_USER@$DEV_DEPLOY_HOST "cd $DEV_DEPLOY_DIR && php artisan config:clear && php artisan migrate"
