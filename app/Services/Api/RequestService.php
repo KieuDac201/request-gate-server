@@ -140,4 +140,18 @@ class RequestService extends AbstractService implements RequestServiceInterface
             ];
         }
     }
+    public function destroy(Request $request)
+    {
+        if (Auth::user()->id != $request->author_id) {
+            throw new CheckAuthorizationException('You are not allowed to perform this action');
+        }
+        if ($request->status != RequestStatusEnum::REQUEST_STATUS_OPEN) {
+            throw new QueryException('You can only delete request in open state');
+        }
+        if ($this->requestRepository->destroy($request)) {
+            return [
+                'message' => 'Success'
+            ];
+        }
+    }
 }
