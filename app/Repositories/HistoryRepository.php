@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
+use App\Enums\RoleEnum;
 
 class HistoryRepository extends BaseRepository implements HistoryRepositoryInterface
 {
@@ -69,11 +70,12 @@ class HistoryRepository extends BaseRepository implements HistoryRepositoryInter
     public function addComment($data)
     {
         $history = new History;
-        $history->request_id = $data->id;
+        $history->request_id = $data['id'];
         $history->user_id = Auth::user()->id;
-        $history->content = $data->content;
+        $history->content = $data['content'];
         $history->type = 'comment';
         $history->save();
+        return $history;
     }
 
     public function addUpdateHistory($request, $params)
@@ -189,5 +191,14 @@ class HistoryRepository extends BaseRepository implements HistoryRepositoryInter
                 'new_value' => $change[$key]['newValue']],
             ]);
         }
+    }
+
+    public function getDivisionManager($id)
+    {
+        $author = User::where('users.id', '=', $id)->first();
+        $userTPB = User::where('users.department_id', $author->department_id)
+        ->where('users.role_id', RoleEnum::ROLE_QUAN_LY_BO_PHAN)
+        ->first();
+        return $userTPB->id;
     }
 }

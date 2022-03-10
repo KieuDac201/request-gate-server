@@ -63,5 +63,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::group(['prefix' => 'histories'], function () {
         Route::get('/{id}',[HistoryController::class,'index']);
         Route::get('/', [HistoryController::class, 'getList']);
+        Route::post('/post-comment', [HistoryController::class, 'addComment']);
     });
 });
