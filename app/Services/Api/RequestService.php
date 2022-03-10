@@ -97,6 +97,7 @@ class RequestService extends AbstractService implements RequestServiceInterface
             throw new QueryException('Khong cung phong ban nen khong update status');
         }
 
+        HistoryRepository::addUpdateHistory($request, $params);
         $data = $this->requestRepository->update($request, $params);
         $users = $this->requestRepository->getUser(
             $params['person_in_charge'],
@@ -114,7 +115,6 @@ class RequestService extends AbstractService implements RequestServiceInterface
             $message = $this->message($request, $type = 'Update', $status);
 
             SendMail::dispatch($message, $users)->delay(now()->addMinute(1));
-            HistoryRepository:: addUpdateHistory($request, $params);
         if ($this->requestRepository->update($request, $params)) {
             return [
                 'message' => 'Update thanh cong ',
