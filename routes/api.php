@@ -26,6 +26,7 @@ use App\Http\Controllers\Api\HistoryController;
 Route::post('forgot-password', [ForgotResetPasswordController::class, 'forgotPassword']);
 Route::post('reset-password', [ForgotResetPasswordController::class, 'resetPassword']);
 Route::post('login', [LoginController::class, 'loginApi']);
+Route::post('login-gmail', [UserController::class, 'loginGmail']);
 
 //api need logged in
 Route::group(['middleware' => ['auth:sanctum']], function () {
