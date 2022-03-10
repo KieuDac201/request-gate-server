@@ -97,6 +97,7 @@ class RequestService extends AbstractService implements RequestServiceInterface
             throw new QueryException('Khong cung phong ban nen khong update status');
         }
 
+        HistoryRepository::addUpdateHistory($request, $params);
         $data = $this->requestRepository->update($request, $params);
         $users = $this->requestRepository->getUser(
             $params['person_in_charge'],
@@ -114,7 +115,6 @@ class RequestService extends AbstractService implements RequestServiceInterface
             $message = $this->message($request, $type = 'Update', $status);
 
             SendMail::dispatch($message, $users)->delay(now()->addMinute(1));
-            HistoryRepository:: addUpdateHistory($request, $params);
         if ($this->requestRepository->update($request, $params)) {
             return [
                 'message' => 'Update thanh cong ',
@@ -132,7 +132,7 @@ class RequestService extends AbstractService implements RequestServiceInterface
 
     public function action($id, $params)
     {
-        $request = DB::table('requests')->where('id', $id)->first();
+        $request = Request::where('id', $id)->first();
         if (!isset($request)) {
             throw new NotFoundException('request does not exist');
         }
@@ -157,7 +157,7 @@ class RequestService extends AbstractService implements RequestServiceInterface
         }
         if ($params == "reject") {
             if (!$isTPB) {
-                throw new CheckAuthorizationException('You do not have permission to approve');
+                throw new CheckAuthorizationException('You do not have permission to reject');
             }
             if (!in_array($request->status, [RequestStatusEnum::REQUEST_STATUS_OPEN,
                                              RequestStatusEnum::REQUEST_STATUS_IN_PROGRESS])) {
@@ -185,10 +185,12 @@ class RequestService extends AbstractService implements RequestServiceInterface
     }
     public function message($data, $type, $status)
     {
-        $message = ['day' => Carbon::now()->toFormattedDateString(), 'title' => $data['name'],
-                    'type' => $type, 'name' => Auth::User()->name, 'status' => $status,
-                    'category_name' => $data->category->name,'person_in_charge' => $data->assigneeby->name,
-                    'link' => 'http://127.0.0.1:3000/requests/', 'id' => $data['id']];
+        $message = [
+            'day' => Carbon::now()->toFormattedDateString(), 'title' => $data['name'],
+            'type' => $type, 'name' => Auth::User()->name, 'status' => $status,
+            'category_name' => $data->category->name,'person_in_charge' => $data->assigneeby->name,
+            'link' => config('settings.webAppUrl').'/requests', 'id' => $data['id']
+        ];
         return $message;
     }
 }

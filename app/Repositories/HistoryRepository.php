@@ -57,7 +57,7 @@ class HistoryRepository extends BaseRepository implements HistoryRepositoryInter
         return $histories;
     }
 
-    public function addCreateHistory($data)
+    public static function addCreateHistory($data)
     {
         $history = new History;
         $history->request_id = $data->id;
@@ -78,7 +78,7 @@ class HistoryRepository extends BaseRepository implements HistoryRepositoryInter
         return $history;
     }
 
-    public function addUpdateHistory($request, $params)
+    public static function addUpdateHistory($request, $params)
     {
         $history = new History;
         $history->request_id = $request->id;

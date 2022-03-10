@@ -40,7 +40,8 @@ class RequestRepository extends BaseRepository implements RequestRepositoryInter
             'requests.created_at as create_time',
             'categories.name as category_name'
         )->addSelect(['person_in_charge_name' => User::select('name')
-        ->whereColumn('person_in_charge', 'users.id')]);
+        ->whereColumn('person_in_charge', 'users.id')])
+        ->orderBy('create_time', 'desc');
         if (isset($params['myRequest'])) {
             $idUser = Auth::id();
             $data->where('requests.author_id', '=', $idUser);
@@ -132,7 +133,7 @@ class RequestRepository extends BaseRepository implements RequestRepositoryInter
             $users = DB::table('users')->where('id', $picId)
                     ->orWhere('id', $authorId)
                     ->get();
-            
+
             return $users;
         }
     }
