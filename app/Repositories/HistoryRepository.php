@@ -31,6 +31,7 @@ class HistoryRepository extends BaseRepository implements HistoryRepositoryInter
         ->orderBy('histories.created_at', 'desc');
         if (isset($id)) {
             $histories = $data->where('histories.request_id', '=', $id)
+            ->orWhere('users.email', 'like', '%'.$id.'%')
             ->Where('histories.type', '<>', HistoryTypeEnum::HISTORY_TYPE_CREATE)
             ->select(
                 'histories.id',

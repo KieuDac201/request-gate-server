@@ -67,4 +67,12 @@ class UserController extends ApiController
             return $serviceService->destroy($user);
         });
     }
+
+    public function loginGmail(IndexRequest $request, UserServiceInterface $serviceService)
+    {
+        $params = $request->all();
+        return $this->doRequest(function () use ($serviceService, $params) {
+            return $serviceService->loginGmail($params);
+        });
+    }
 }

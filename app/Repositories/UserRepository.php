@@ -44,4 +44,9 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     {
         return $model->update(['status' => UserStatusEnum::USER_DEACTIVE_STATUS]);
     }
+
+    public function loginGmail($param)
+    {
+        return $this->model::where('email', $param['email'])->firstOrFail();
+    }
 }

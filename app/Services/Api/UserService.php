@@ -11,8 +11,10 @@ use GuzzleHttp\Psr7\Message;
 use Illuminate\Database\Eloquent\Builder;
 use App\Enums\RoleEnum;
 use App\Exceptions\QueryException;
+use App\Exceptions\CheckAuthorizationException;
 use App\Models\Department;
 use Illuminate\Support\Facades\Hash;
+use App\Enums\UserStatusEnum;
 
 class UserService extends AbstractService implements UserServiceInterface
 {
@@ -103,6 +105,38 @@ class UserService extends AbstractService implements UserServiceInterface
             return [
                 'message' => 'Success'
             ];
+        }
+    }
+
+    public function loginGmail($params)
+    {
+        $payload = 'https://oauth2.googleapis.com/tokeninfo?id_token=' . $params['id_token'];
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params));
+        curl_setopt($ch, CURLOPT_URL, $payload);
+        curl_setopt($ch, CURLOPT_HEADER, false);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($ch);
+        curl_close($ch);
+        $userInfo = json_decode($response, true);
+        
+        if (isset($userInfo['email']) && explode("@", $userInfo['email'])[1] == 'hblab.vn') {
+            $user = $this->userRepository->loginGmail($userInfo['email']);
+            $token = $user->createToken('auth_token')->plainTextToken;
+            if ($user && $user->status == UserStatusEnum::USER_ACTIVE_STATUS) {
+                return [
+                    'token' => $token,
+                    'message'=> 'Login google successfully',
+                    'data' => $user
+                    ];
+            } elseif ($user && $user->status == UserStatusEnum::USER_DEACTIVE_STATUS || !$user) {
+                throw new CheckAuthorizationException('Email does not belong to organization');
+            } else {
+                throw new CheckAuthorizationException('Email does not belong to organization');
+            }
+        } else {
+            throw new CheckAuthorizationException('Invalid token or Email does not belong to organization');
         }
     }
 }
