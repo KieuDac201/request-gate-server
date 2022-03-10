@@ -12,6 +12,7 @@ use App\Exceptions\NotFoundException;
 use App\Models\Category;
 use App\Models\Request;
 use App\Models\User;
+use App\Repositories\HistoryRepository;
 use App\Services\AbstractService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -49,6 +50,7 @@ class RequestService extends AbstractService implements RequestServiceInterface
     public function store($params)
     {
         $data = $this->requestRepository->store($params);
+        HistoryRepository::addCreateHistory($data);
         $users = $this->requestRepository->getUser(
             $params['person_in_charge'],
             $data->createBy->department_id,
@@ -110,12 +112,15 @@ class RequestService extends AbstractService implements RequestServiceInterface
             $status = 'Close';
         }
             $message = $this->message($request, $type = 'Update', $status);
-        
+
             SendMail::dispatch($message, $users)->delay(now()->addMinute(1));
+            HistoryRepository:: addUpdateHistory($request, $params);
+        if ($this->requestRepository->update($request, $params)) {
             return [
                 'message' => 'Update thanh cong ',
                 'data'  => $data,
             ];
+        }
     }
     public function detail($id)
     {
@@ -180,10 +185,12 @@ class RequestService extends AbstractService implements RequestServiceInterface
     }
     public function message($data, $type, $status)
     {
-        $message = ['day' => Carbon::now()->toFormattedDateString(), 'title' => $data['name'],
-                    'type' => $type, 'name' => Auth::User()->name, 'status' => $status,
-                    'category_name' => $data->category->name,'person_in_charge' => $data->assigneeby->name,
-                    'link' => 'http://127.0.0.1:3000/requests/', 'id' => $data['id']];
+        $message = [
+            'day' => Carbon::now()->toFormattedDateString(), 'title' => $data['name'],
+            'type' => $type, 'name' => Auth::User()->name, 'status' => $status,
+            'category_name' => $data->category->name,'person_in_charge' => $data->assigneeby->name,
+            'link' => config('settings.webAppUrl').'/requests', 'id' => $data['id']
+        ];
         return $message;
     }
 }

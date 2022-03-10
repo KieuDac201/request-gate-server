@@ -90,7 +90,7 @@ button a{
     <table>
       <tr>
         <td class="box_id">
-          <a href="{{$data['link']}}{{$data['id']}}">{{$data['id']}}</a>
+          <a href="{{$data['link']}}/{{$data['id']}}">{{$data['id']}}</a>
         </td>
         <td>
           <p>
@@ -102,7 +102,7 @@ button a{
     </table>
   </div>
   <div class= "submit">
-        <button><a href="{{$data['link']}}{{$data['id']}}">Go To</a></button>
+        <button><a href="{{$data['link']}}/{{$data['id']}}">Go To</a></button>
   </div>
 </div>
 </div>
