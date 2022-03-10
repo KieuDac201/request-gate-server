@@ -185,10 +185,12 @@ class RequestService extends AbstractService implements RequestServiceInterface
     }
     public function message($data, $type, $status)
     {
-        $message = ['day' => Carbon::now()->toFormattedDateString(), 'title' => $data['name'],
-                    'type' => $type, 'name' => Auth::User()->name, 'status' => $status,
-                    'category_name' => $data->category->name,'person_in_charge' => $data->assigneeby->name,
-                    'link' => 'http://127.0.0.1:3000/requests/', 'id' => $data['id']];
+        $message = [
+            'day' => Carbon::now()->toFormattedDateString(), 'title' => $data['name'],
+            'type' => $type, 'name' => Auth::User()->name, 'status' => $status,
+            'category_name' => $data->category->name,'person_in_charge' => $data->assigneeby->name,
+            'link' => config('settings.webAppUrl').'/requests', 'id' => $data['id']
+        ];
         return $message;
     }
 }
