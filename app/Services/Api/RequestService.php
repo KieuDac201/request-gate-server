@@ -12,10 +12,12 @@ use App\Exceptions\NotFoundException;
 use App\Models\Category;
 use App\Models\Request;
 use App\Models\User;
+use App\Repositories\HistoryRepository;
 use App\Services\AbstractService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Exceptions\CheckAuthorizationException;
+use Carbon\Carbon;
 
 class RequestService extends AbstractService implements RequestServiceInterface
 {
@@ -48,6 +50,14 @@ class RequestService extends AbstractService implements RequestServiceInterface
     public function store($params)
     {
         $data = $this->requestRepository->store($params);
+        HistoryRepository::addCreateHistory($data);
+        $users = $this->requestRepository->getUser(
+            $params['person_in_charge'],
+            $data->createBy->department_id,
+            $authorId = null
+        );
+        $message = $this->message($data, $type = 'Create', $status = 'Open');
+        SendMail::dispatch($message, $users)->delay(now()->addMinute(1));
         return [
             'message' => 'Them thanh cong',
             'data'  => $data,
@@ -87,9 +97,28 @@ class RequestService extends AbstractService implements RequestServiceInterface
             throw new QueryException('Khong cung phong ban nen khong update status');
         }
 
+        $data = $this->requestRepository->update($request, $params);
+        $users = $this->requestRepository->getUser(
+            $params['person_in_charge'],
+            $departmentId = null,
+            $request['author_id']
+        );
+        $status = null;
+        if ($params['status'] == RequestStatusEnum::REQUEST_STATUS_OPEN) {
+            $status = 'Open';
+        } elseif ($params['status'] == RequestStatusEnum::REQUEST_STATUS_IN_PROGRESS) {
+            $status = 'In Progress';
+        } elseif ($params['status'] == RequestStatusEnum::REQUEST_STATUS_CLOSE) {
+            $status = 'Close';
+        }
+            $message = $this->message($request, $type = 'Update', $status);
+
+            SendMail::dispatch($message, $users)->delay(now()->addMinute(1));
+            HistoryRepository:: addUpdateHistory($request, $params);
         if ($this->requestRepository->update($request, $params)) {
             return [
-                'message' => 'Update thanh cong '
+                'message' => 'Update thanh cong ',
+                'data'  => $data,
             ];
         }
     }
@@ -139,5 +168,27 @@ class RequestService extends AbstractService implements RequestServiceInterface
                 'message' => 'Success'
             ];
         }
+    }
+    public function destroy(Request $request)
+    {
+        if (Auth::user()->id != $request->author_id) {
+            throw new CheckAuthorizationException('You are not allowed to perform this action');
+        }
+        if ($request->status != RequestStatusEnum::REQUEST_STATUS_OPEN) {
+            throw new QueryException('You can only delete request in open state');
+        }
+        if ($this->requestRepository->destroy($request)) {
+            return [
+                'message' => 'Success'
+            ];
+        }
+    }
+    public function message($data, $type, $status)
+    {
+        $message = ['day' => Carbon::now()->toFormattedDateString(), 'title' => $data['name'],
+                    'type' => $type, 'name' => Auth::User()->name, 'status' => $status,
+                    'category_name' => $data->category->name,'person_in_charge' => $data->assigneeby->name,
+                    'link' => 'http://127.0.0.1:3000/requests/', 'id' => $data['id']];
+        return $message;
     }
 }

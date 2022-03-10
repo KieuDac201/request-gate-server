@@ -56,9 +56,11 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::put('/update/{request}', [RequestController::class,'update']);
         Route::get('/detail/{request}', [RequestController::class, 'detail']);
         Route::post('/action/{id}', [RequestController::class,'action']);
+        Route::delete('/delete/{request}', [RequestController::class, 'destroy']);
     });
     Route::group(['prefix' => 'histories'], function () {
         Route::get('/{id}',[HistoryController::class,'index']);
         Route::get('/', [HistoryController::class, 'getList']);
+        Route::post('/post-comment', [HistoryController::class, 'addComment']);
     });
 });

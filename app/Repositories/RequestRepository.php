@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Pagination\Paginator;
 use App\Enums\RequestStatusEnum;
 use App\Enums\RoleEnum;
+use Carbon\Carbon;
 
 class RequestRepository extends BaseRepository implements RequestRepositoryInterface
 {
@@ -80,6 +81,7 @@ class RequestRepository extends BaseRepository implements RequestRepositoryInter
         $data = [
             'id' => $request->id,
             'name' => $request->name,
+            'content' => $request->content,
             'priority' => $request->priority,
             'content' => $request->content,
             'status' => $request->status,
@@ -114,5 +116,24 @@ class RequestRepository extends BaseRepository implements RequestRepositoryInter
     public function reject(Model $model)
     {
         return $model->update(['status' => RequestStatusEnum::REQUEST_STATUS_CLOSE]);
+    }
+    public function getUser($picId, $departmentId, $authorId)
+    {
+        if ($departmentId != null) {
+            $users = DB::table('users')->where('id', $picId)
+                ->orWhere([['department_id', '=', $departmentId],
+                ['role_id','=' , RoleEnum::ROLE_QUAN_LY_BO_PHAN]])
+                ->orWhere('role_id', RoleEnum::ROLE_ADMIN)
+                ->get();
+
+            return $users;
+        }
+        if ($authorId != null) {
+            $users = DB::table('users')->where('id', $picId)
+                    ->orWhere('id', $authorId)
+                    ->get();
+            
+            return $users;
+        }
     }
 }
