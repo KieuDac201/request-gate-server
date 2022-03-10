@@ -115,14 +115,18 @@ class HistoryRepository extends BaseRepository implements HistoryRepositoryInter
 
             if ($oldValue == RequestPriorityEnum::REQUEST_PRIORITY_NORMAL) {
                 $oldValue = 'Normal';
+            } elseif ($oldValue == RequestPriorityEnum::REQUEST_PRIORITY_HIGH) {
+                $oldValue = 'High';
             } else {
-                $newValue = 'High';
+                $oldValue = 'Low';
             }
 
             if ($newValue == RequestPriorityEnum::REQUEST_PRIORITY_NORMAL) {
                 $newValue = 'Normal';
-            } else {
+            } elseif ($newValue == RequestPriorityEnum::REQUEST_PRIORITY_HIGH) {
                 $newValue = 'High';
+            } else {
+                $newValue = 'Low';
             }
 
             $change[$changeField] = array(
