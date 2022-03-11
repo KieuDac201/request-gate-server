@@ -65,7 +65,9 @@ class RequestRepository extends BaseRepository implements RequestRepositoryInter
             $data->where('requests.category_id', '=', $params['category']);
         }
         if (isset($params['date_create'])) {
-            $data->whereDate('requests.created_at', '=', $params['date_create']);
+            $date = new Carbon($params['date_create']);
+            $date->toDateString();
+            $data->whereDate('requests.created_at', '=', $date);
         }
         return $data;
     }
