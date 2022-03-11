@@ -11,6 +11,7 @@ use BenSampo\Enum\Enum;
  */
 final class RequestPriorityEnum extends Enum
 {
-    const REQUEST_PRIORITY_NORMAL = 0;
-    const REQUEST_PRIORITY_HIGH = 1;
+    const REQUEST_PRIORITY_LOW = 1;
+    const REQUEST_PRIORITY_NORMAL = 2;
+    const REQUEST_PRIORITY_HIGH = 3;
 }

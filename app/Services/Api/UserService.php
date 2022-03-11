@@ -11,8 +11,10 @@ use GuzzleHttp\Psr7\Message;
 use Illuminate\Database\Eloquent\Builder;
 use App\Enums\RoleEnum;
 use App\Exceptions\QueryException;
+use App\Exceptions\CheckAuthorizationException;
 use App\Models\Department;
 use Illuminate\Support\Facades\Hash;
+use App\Enums\UserStatusEnum;
 
 class UserService extends AbstractService implements UserServiceInterface
 {
@@ -103,6 +105,38 @@ class UserService extends AbstractService implements UserServiceInterface
             return [
                 'message' => 'Success'
             ];
+        }
+    }
+
+    public function loginGmail($params)
+    {
+        $userInfo = file_get_contents(
+            'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token='.$params['access_token']
+        );
+        $explodeUserInfo = explode(',', $userInfo);
+        
+        if (isset($explodeUserInfo[5])) {
+            $email = substr($explodeUserInfo[5], 13, -1);
+        } else {
+            throw new CheckAuthorizationException('Invalid token');
+        }
+
+        if (isset($email) && explode("@", $email)[1] == 'hblab.vn') {
+            $user = $this->userRepository->loginGmail($email);
+            $token = $user->createToken('auth_token')->plainTextToken;
+            if ($user && $user->status == UserStatusEnum::USER_ACTIVE_STATUS) {
+                return [
+                    'token' => $token,
+                    'message'=> 'Login google successfully',
+                    'data' => $user
+                    ];
+            } elseif (!$user && $user->status == UserStatusEnum::USER_DEACTIVE_STATUS || !$user) {
+                throw new CheckAuthorizationException('Email does not belong to organization');
+            } else {
+                throw new CheckAuthorizationException('Email does not belong to organization');
+            }
+        } else {
+            throw new CheckAuthorizationException('Email does not belong to organization');
         }
     }
 }
