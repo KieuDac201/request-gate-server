@@ -47,7 +47,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
             Route::get('/', [RoleController::class, 'index']);
         });
         Route::group(['prefix' => 'categories'], function () {
-            Route::get('/get-list-pic /{category}',[CategoryController::class,'getListPersonInCharge']);
+            Route::get('/get-list-pic/{category}',[CategoryController::class,'getListPersonInCharge']);
             Route::get('/',[CategoryController::class,'index']);
             Route::post('/store',[CategoryController::class,'store']);
             Route::put('/update/{category}',[CategoryController::class,'update']);
