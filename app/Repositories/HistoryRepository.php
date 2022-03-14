@@ -206,4 +206,14 @@ class HistoryRepository extends BaseRepository implements HistoryRepositoryInter
         ->first();
         return $userTPB->id;
     }
+
+    public static function addActionHistory($request_id, $author_id, $type)
+    {
+        $history = new History;
+        $history->request_id = $request_id;
+        $history->user_id = $author_id;
+        $history->content = $type;
+        $history->type = $type;
+        $history->save();
+    }
 }

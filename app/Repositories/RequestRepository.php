@@ -65,7 +65,9 @@ class RequestRepository extends BaseRepository implements RequestRepositoryInter
             $data->where('requests.category_id', '=', $params['category']);
         }
         if (isset($params['date_create'])) {
-            $data->whereDate('requests.created_at', '=', $params['date_create']);
+            $date = new Carbon($params['date_create']);
+            $date->toDateString();
+            $data->whereDate('requests.created_at', '=', $date);
         }
         return $data;
     }
@@ -109,10 +111,6 @@ class RequestRepository extends BaseRepository implements RequestRepositoryInter
         ->first();
         return $userTBP;
     }
-    public function approve(Model $model)
-    {
-        return $model->update(['status' => RequestStatusEnum::REQUEST_STATUS_IN_PROGRESS]);
-    }
 
     public function reject(Model $model)
     {
@@ -136,5 +134,17 @@ class RequestRepository extends BaseRepository implements RequestRepositoryInter
 
             return $users;
         }
+    }
+
+    public function approved($idRequest)
+    {
+        $approve = Request::join('histories', 'requests.id', '=', 'histories.request_id')
+        ->where('requests.id', $idRequest)
+        ->where('histories.type', 'approve')
+        ->count();
+        if ($approve > 0) {
+            return true;
+        }
+        return false;
     }
 }

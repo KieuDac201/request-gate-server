@@ -6,6 +6,7 @@ use App\Contracts\Repositories\DepartmentRepositoryInterface;
 use App\Contracts\Services\Api\DepartmentServiceInterface;
 use App\Models\Department;
 use App\Services\AbstractService;
+use App\Exceptions\QueryException;
 
 class DepartmentService extends AbstractService implements DepartmentServiceInterface
 {
@@ -33,6 +34,10 @@ class DepartmentService extends AbstractService implements DepartmentServiceInte
 
     public function store($params)
     {
+        $checkDepartment = $this->departmentRepository->checkDepartment($department_id = null, $params);
+        if ($checkDepartment > 0) {
+            throw new QueryException('This department name already exists');
+        }
         return [
             'message' => 'Success',
             'data' => $this->departmentRepository->store($params)
@@ -41,6 +46,10 @@ class DepartmentService extends AbstractService implements DepartmentServiceInte
 
     public function update(Department $department, $params)
     {
+        $checkDepartment = $this->departmentRepository->checkDepartment($department->id, $params);
+        if ($checkDepartment > 0) {
+            throw new QueryException('This department name already exists');
+        }
         if ($this->departmentRepository->update($department, $params)) {
             return [
                 'message' => 'Success'

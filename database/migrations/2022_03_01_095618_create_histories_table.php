@@ -18,11 +18,11 @@ class CreateHistoriesTable extends Migration
             $table->integer('request_id');
             $table->integer('user_id');
             $table->string('content');
-            $table->enum('type', ['comment', 'update', 'create']);
+            $table->enum('type', ['comment', 'update', 'create', 'approve', 'reject']);
             $table->timestamps();
             $table->softDeletes();
         });
-    }   
+    }
 
     /**
      * Reverse the migrations.
