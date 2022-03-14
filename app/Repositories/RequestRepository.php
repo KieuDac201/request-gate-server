@@ -108,10 +108,6 @@ class RequestRepository extends BaseRepository implements RequestRepositoryInter
         ->first();
         return $userTBP;
     }
-    public function approve(Model $model)
-    {
-        return $model->update(['status' => RequestStatusEnum::REQUEST_STATUS_IN_PROGRESS]);
-    }
 
     public function reject(Model $model)
     {
@@ -135,5 +131,17 @@ class RequestRepository extends BaseRepository implements RequestRepositoryInter
 
             return $users;
         }
+    }
+
+    public function approved($idRequest)
+    {
+        $approve = Request::join('histories', 'requests.id', '=', 'histories.request_id')
+        ->where('requests.id', $idRequest)
+        ->where('histories.type', 'approve')
+        ->count();
+        if ($approve > 0) {
+            return true;
+        }
+        return false;
     }
 }

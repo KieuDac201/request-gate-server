@@ -38,4 +38,15 @@ class DepartmentRepository extends BaseRepository implements DepartmentRepositor
             return  $model->update($params);
         }
     }
+    public function checkDepartment($department_id, $params)
+    {
+        if ($department_id == null) {
+            $checkDepartment = Department::where('name', '=', $params['name'])->count();
+            return $checkDepartment;
+        }
+        $checkDepartment = Department::where('name', '=', $params['name'])
+        ->where('id', '!=', $department_id)
+        ->count();
+        return $checkDepartment;
+    }
 }
