@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Contracts\Services\Api\UserServiceInterface;
+use App\Http\Requests\Api\Users\ChangePasswordRequest;
 use App\Http\Requests\Api\Users\IndexRequest;
 use App\Models\User;
 use App\Http\Requests\Api\Users\StoreRequest;
@@ -43,7 +44,7 @@ class UserController extends ApiController
             return $serviceService->find($id);
         });
     }
-    
+
     public function store(StoreRequest $request, UserServiceInterface $serviceService)
     {
         $params = $request->all();
@@ -73,6 +74,14 @@ class UserController extends ApiController
         $params = $request->all();
         return $this->doRequest(function () use ($serviceService, $params) {
             return $serviceService->loginGmail($params);
+        });
+    }
+
+    public function changePassword(ChangePasswordRequest $request, UserServiceInterface $serviceService, User $user)
+    {
+        $params = $request->all();
+        return $this->doRequest(function () use ($serviceService, $user, $params) {
+            return $serviceService->changePassword($user, $params);
         });
     }
 }

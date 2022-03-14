@@ -13,6 +13,7 @@ use App\Enums\RoleEnum;
 use App\Exceptions\QueryException;
 use App\Exceptions\CheckAuthorizationException;
 use App\Models\Department;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Enums\UserStatusEnum;
 
@@ -92,7 +93,7 @@ class UserService extends AbstractService implements UserServiceInterface
         if ($params['role_id'] == RoleEnum::ROLE_ADMIN && $params['department_id'] != 2) {
             throw new QueryException('Phong nay khong duoc them Admin');
         }
-        
+
         return [
             'message' => 'update thanh cong',
             'data'  => $this->userRepository->update($user, $params)
@@ -114,7 +115,7 @@ class UserService extends AbstractService implements UserServiceInterface
             'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token='.$params['access_token']
         );
         $explodeUserInfo = explode(',', $userInfo);
-        
+
         if (isset($explodeUserInfo[5])) {
             $email = substr($explodeUserInfo[5], 13, -1);
         } else {
@@ -138,5 +139,15 @@ class UserService extends AbstractService implements UserServiceInterface
         } else {
             throw new CheckAuthorizationException('Email does not belong to organization');
         }
+    }
+    public function changePassword(User $user, $params)
+    {
+        if (!(Hash::check($params['old_password'], $user->password))) {
+            throw new QueryException('Old password is incorrect');
+        }
+        $this->userRepository->changePassword($user, $params);
+        return [
+            'message' => 'Success'
+        ];
     }
 }

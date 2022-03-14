@@ -6,6 +6,7 @@ use App\Contracts\Repositories\UserRepositoryInterface;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use App\Enums\UserStatusEnum;
+use Illuminate\Support\Facades\Hash;
 
 class UserRepository extends BaseRepository implements UserRepositoryInterface
 {
@@ -48,5 +49,10 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     public function loginGmail($param)
     {
         return $this->model::where('email', $param)->firstOrFail();
+    }
+
+    public function changePassWord(User $user, $params)
+    {
+        return User::where('id', $user->id)->update(['password' => Hash::make($params['new_password'])]);
     }
 }
