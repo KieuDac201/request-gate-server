@@ -140,33 +140,34 @@ class RequestService extends AbstractService implements RequestServiceInterface
         $user = Auth::user();
         $userTBP = $this->requestRepository->getDivisionManager($request->id);
         $idTPB = $userTBP->id;
-        $isAdmin = ($user->role_id == RoleEnum::ROLE_ADMIN) ? true : false;
         $isTPB = ($user->id == $idTPB) ? true : false;
 
+        if (!$isTPB) {
+            throw new CheckAuthorizationException('You do not have permission');
+        }
         if ($params == "approve") {
-            if (!$isAdmin && !$isTPB) {
-                throw new CheckAuthorizationException('You do not have permission to approve');
+            if ($this->requestRepository->approved($request->id) == true) {
+                throw new QueryException('You have approved this request');
             }
             if ($request->status != RequestStatusEnum::REQUEST_STATUS_OPEN) {
                 throw new QueryException('This request is not open');
             }
+            HistoryRepository::addActionHistory($request->id, $user->id, $params);
             return [
-                $this->requestRepository->approve($request),
-                'message' => 'Success'
+                'message' => 'Approve success'
                 ];
         }
         if ($params == "reject") {
-            if (!$isTPB) {
-                throw new CheckAuthorizationException('You do not have permission to reject');
-            }
             if (!in_array($request->status, [RequestStatusEnum::REQUEST_STATUS_OPEN,
                                              RequestStatusEnum::REQUEST_STATUS_IN_PROGRESS])) {
                 throw new QueryException('This request is not open or in progress');
             }
-            return [
-                $this->requestRepository->reject($request),
-                'message' => 'Success'
-            ];
+            if ($this->requestRepository->reject($request)) {
+                HistoryRepository::addActionHistory($request->id, $user->id, $params);
+                return [
+                    'message' => 'Success'
+                ];
+            }
         }
     }
     public function destroy(Request $request)
