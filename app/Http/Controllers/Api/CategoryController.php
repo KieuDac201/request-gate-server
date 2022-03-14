@@ -28,7 +28,7 @@ class CategoryController extends ApiController
             return $serviceService->find($id);
         });
     }
-    
+
     public function store(StoreRequest $request, CategoryServiceInterface $serviceService)
     {
         $params = $request->all();
@@ -36,6 +36,7 @@ class CategoryController extends ApiController
             return $serviceService->store($params);
         });
     }
+
     public function update(UpdateRequest $request, CategoryServiceInterface $serviceService, Category $category)
     {
         $params = $request->all();
