@@ -47,6 +47,6 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
 
     public function loginGmail($param)
     {
-        return $this->model::where('email', $param)->firstOrFail();
+        return $this->model::where('email', $param)->first();
     }
 }

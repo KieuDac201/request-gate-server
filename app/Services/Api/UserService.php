@@ -123,14 +123,14 @@ class UserService extends AbstractService implements UserServiceInterface
 
         if (isset($email) && explode("@", $email)[1] == 'hblab.vn') {
             $user = $this->userRepository->loginGmail($email);
-            $token = $user->createToken('auth_token')->plainTextToken;
             if ($user && $user->status == UserStatusEnum::USER_ACTIVE_STATUS) {
+                $token = $user->createToken('auth_token')->plainTextToken;
                 return [
                     'token' => $token,
                     'message'=> 'Login google successfully',
                     'data' => $user
                     ];
-            } elseif (!$user && $user->status == UserStatusEnum::USER_DEACTIVE_STATUS || !$user) {
+            } elseif ($user && $user->status == UserStatusEnum::USER_DEACTIVE_STATUS || !$user) {
                 throw new CheckAuthorizationException('Email does not belong to organization');
             } else {
                 throw new CheckAuthorizationException('Email does not belong to organization');
