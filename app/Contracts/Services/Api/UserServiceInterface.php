@@ -17,4 +17,6 @@ interface UserServiceInterface
     public function destroy(User $user);
 
     public function loginGmail($params);
+
+    public function changePassword(User $user, $params);
 }
