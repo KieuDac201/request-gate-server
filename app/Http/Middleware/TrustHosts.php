@@ -12,6 +12,7 @@ class TrustHosts extends Middleware
     {
         return [
             $this->allSubdomainsOfApplicationUrl(),
+            'https://dev-talents01.hblab.dev'
         ];
     }
 }
