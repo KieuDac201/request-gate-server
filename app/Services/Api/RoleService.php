@@ -30,7 +30,7 @@ class RoleService extends AbstractService implements RoleServiceInterface
     public function index($params)
     {
         return [
-            'data' => $this->roleRepository->getColumns()->get()
+            'data' => $this->roleRepository->getColumns()
         ];
     }
 }

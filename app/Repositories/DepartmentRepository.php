@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 use App\Enums\DepartmentStatusEnum;
 use Illuminate\Support\Facades\DB;
 use App\Exceptions\QueryException;
+use Illuminate\Support\Facades\Cache;
+use Carbon\Carbon;
 
 class DepartmentRepository extends BaseRepository implements DepartmentRepositoryInterface
 {
@@ -18,11 +20,14 @@ class DepartmentRepository extends BaseRepository implements DepartmentRepositor
 
     public function getList($params)
     {
-        $data = $this->model->select('id', 'name', 'status');
-        if (isset($params)) {
-            $data->where('departments.name', 'like', '%'.$params.'%');
-        }
-        return $data->get();
+        $value = Cache::remember('departments'.$params, Carbon::now()->addMinutes(5), function () use ($params) {
+            $data = $this->model->select('id', 'name', 'status');
+            if (isset($params)) {
+                $data->where('departments.name', 'like', '%'.$params.'%');
+            }
+            return $data->get();
+        });
+        return $value;
     }
 
     public function update(Model $model, array $params)

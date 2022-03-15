@@ -10,6 +10,7 @@ use App\Exceptions\QueryException;
 use App\Models\Category;
 use App\Models\User;
 use App\Services\AbstractService;
+use Illuminate\Support\Facades\Cache;
 
 class CategoryService extends AbstractService implements CategoryServiceInterface
 {
@@ -43,6 +44,12 @@ class CategoryService extends AbstractService implements CategoryServiceInterfac
                 $cate->status = CategoryStatusEnum::CATEGORY_ACTIVE_STATUS;
                 $cate->save();
                 $cate->users()->attach($params['user_id']);
+
+                if (Cache::has('categories'.$cate->id)) {
+                    Cache::forget('categories'.$cate->id);
+                    $this->departmentRepository->find($cate->id, $columns = ['*']);
+                }
+
                 return [
                     'message' => 'Success',
                     'data' => [
@@ -76,6 +83,12 @@ class CategoryService extends AbstractService implements CategoryServiceInterfac
                 $cate->status = $params['status'];
                 $cate->save();
                 $cate->users()->sync($params['user_id']);
+
+                if (Cache::has('categories'.$cate->id)) {
+                    Cache::forget('categories'.$cate->id);
+                    $this->departmentRepository->find($cate->id, $columns = ['*']);
+                }
+
                 return [
                     'message' => 'Success',
                     'data' => [
