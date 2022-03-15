@@ -5,6 +5,8 @@ namespace App\Repositories;
 use App\Contracts\Repositories\CategoryRepositoryInterface;
 use App\Models\Category;
 use App\Models\User;
+use Illuminate\Support\Facades\Cache;
+use Carbon\Carbon;
 
 class CategoryRepository extends BaseRepository implements CategoryRepositoryInterface
 {
@@ -34,7 +36,10 @@ class CategoryRepository extends BaseRepository implements CategoryRepositoryInt
     }
     public function find($id, $columns = ['*'])
     {
-        $category = $this->model->findOrFail($id, $columns);
-        return $category->load(['users:id,name']);
+        $value = Cache::remember('categories'.$id, Carbon::now()->addMinutes(5), function () use ($id, $columns) {
+            $category = $this->model->findOrFail($id, $columns);
+            return $category->load(['users:id,name']);
+        });
+        return $value;
     }
 }

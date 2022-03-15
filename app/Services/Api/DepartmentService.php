@@ -7,6 +7,7 @@ use App\Contracts\Services\Api\DepartmentServiceInterface;
 use App\Models\Department;
 use App\Services\AbstractService;
 use App\Exceptions\QueryException;
+use Illuminate\Support\Facades\Cache;
 
 class DepartmentService extends AbstractService implements DepartmentServiceInterface
 {
@@ -38,9 +39,13 @@ class DepartmentService extends AbstractService implements DepartmentServiceInte
         if ($checkDepartment > 0) {
             throw new QueryException('This department name already exists');
         }
+        $data = $this->departmentRepository->store($params);
+        $value = Cache::get('departments');
+        $value[] = $data;
+        Cache::put('departments', $value);
         return [
             'message' => 'Success',
-            'data' => $this->departmentRepository->store($params)
+            'data' => $data
         ];
     }
 
@@ -51,6 +56,8 @@ class DepartmentService extends AbstractService implements DepartmentServiceInte
             throw new QueryException('This department name already exists');
         }
         if ($this->departmentRepository->update($department, $params)) {
+            Cache::forget('departments');
+            $this->departmentRepository->getList($params = null);
             return [
                 'message' => 'Success'
             ];
