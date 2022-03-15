@@ -108,7 +108,7 @@ class RequestRepository extends BaseRepository implements RequestRepositoryInter
         ->where('users.role_id', RoleEnum::ROLE_QUAN_LY_BO_PHAN)
         ->select('users.id as id')
         ->first();
-        return $userTBP;
+        return isset($userTBP->id) ? $userTBP->id : null;
     }
 
     public function reject(Model $model)

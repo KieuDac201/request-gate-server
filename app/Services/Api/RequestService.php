@@ -138,17 +138,15 @@ class RequestService extends AbstractService implements RequestServiceInterface
         }
 
         $user = Auth::user();
-        $userTBP = $this->requestRepository->getDivisionManager($request->id);
-        $idTPB = $userTBP->id;
+        $idTPB = $this->requestRepository->getDivisionManager($request->id);
         $isTPB = ($user->id == $idTPB) ? true : false;
-
         if (!$isTPB) {
             throw new CheckAuthorizationException('You do not have permission');
         }
+        if ($this->requestRepository->approved($request->id) == true) {
+            throw new QueryException('This request has been approved');
+        }
         if ($params == "approve") {
-            if ($this->requestRepository->approved($request->id) == true) {
-                throw new QueryException('You have approved this request');
-            }
             if ($request->status != RequestStatusEnum::REQUEST_STATUS_OPEN) {
                 throw new QueryException('This request is not open');
             }

@@ -204,7 +204,7 @@ class HistoryRepository extends BaseRepository implements HistoryRepositoryInter
         $userTPB = User::where('users.department_id', $author->department_id)
         ->where('users.role_id', RoleEnum::ROLE_QUAN_LY_BO_PHAN)
         ->first();
-        return $userTPB->id;
+        return isset($userTPB->id) ? $userTPB->id : null;
     }
 
     public static function addActionHistory($request_id, $author_id, $type)
