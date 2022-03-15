@@ -61,4 +61,4 @@ DeployProduction:
   - composer install --ignore-platform-reqs --no-scripts -q && composer dump-autoload -q
   - echo "$PRD_DEPLOY_ENV_FILE" > .env && echo "OK" > public/health.html
   - rsync -azPq --exclude='.git' ./ $PRD_DEPLOY_USER@$PRD_DEPLOY_HOST:$PRD_DEPLOY_DIR/
-  - ssh $PRD_DEPLOY_USER@$PRD_DEPLOY_HOST "cd $PRD_DEPLOY_DIR && php artisan config:clear && php artisan migrate"
+  - ssh $PRD_DEPLOY_USER@$PRD_DEPLOY_HOST "cd $PRD_DEPLOY_DIR && php artisan config:clear && php artisan migrate --force"
