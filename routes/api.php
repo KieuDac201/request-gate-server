@@ -31,18 +31,21 @@ Route::post('login-gmail', [UserController::class, 'loginGmail']);
 //api need logged in
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('logout', [LoginController::class, 'logoutApi']);
-    Route::group(['middleware' => ['role:admin']], function () {
         Route::group(['prefix' => 'users'], function () {
             Route::get('/', [UserController::class,'index']);
-            Route::post('/store', [UserController::class,'store']);
-            Route::put('/update/{user}', [UserController::class,'update']);
-            Route::post('/deactive/{user}', [UserController::class,'destroy']);
             Route::put('/change_password/{user}', [UserController::class, 'changePassword']);
+            Route::group(['middleware' => 'role:admin'], function () {
+                Route::post('/store', [UserController::class,'store']);
+                Route::put('/update/{user}', [UserController::class,'update']);
+                Route::post('/deactive/{user}', [UserController::class,'destroy']);
+            });
         });
         Route::group(['prefix' => 'departments'], function () {
             Route::get('/', [DepartmentController::class,'index']);
-            Route::post('/store', [DepartmentController::class,'store']);
-            Route::put('/update/{department}', [DepartmentController::class,'update']);
+            Route::group(['middleware' => 'role:admin'], function () {
+                Route::post('/store', [DepartmentController::class,'store']);
+                Route::put('/update/{department}', [DepartmentController::class,'update']);
+            });
         });
         Route::group(['prefix' => 'roles'], function () {
             Route::get('/', [RoleController::class, 'index']);
@@ -50,21 +53,24 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::group(['prefix' => 'categories'], function () {
             Route::get('/get-list-pic/{category}',[CategoryController::class,'getListPersonInCharge']);
             Route::get('/',[CategoryController::class,'index']);
-            Route::post('/store',[CategoryController::class,'store']);
-            Route::put('/update/{category}',[CategoryController::class,'update']);
+            Route::group(['middleware' => 'role:admin'], function () {
+                Route::post('/store',[CategoryController::class,'store']);
+                Route::put('/update/{category}',[CategoryController::class,'update']);
+            });
         });
-    });
-    Route::group(['prefix' => 'requests'], function () {
-        Route::get('/', [RequestController::class,'index']);
-        Route::post('/store', [RequestController::class,'store']);
-        Route::put('/update/{request}', [RequestController::class,'update']);
-        Route::get('/detail/{request}', [RequestController::class, 'detail']);
-        Route::post('/action/{id}', [RequestController::class,'action']);
-        Route::delete('/delete/{request}', [RequestController::class, 'destroy']);
-    });
-    Route::group(['prefix' => 'histories'], function () {
-        Route::get('/{id}',[HistoryController::class,'index']);
-        Route::get('/', [HistoryController::class, 'getList']);
-        Route::post('/post-comment', [HistoryController::class, 'addComment']);
-    });
+        Route::group(['prefix' => 'requests'], function () {
+            Route::get('/', [RequestController::class,'index']);
+            Route::post('/store', [RequestController::class,'store']);
+            Route::put('/update/{request}', [RequestController::class,'update']);
+            Route::get('/detail/{request}', [RequestController::class, 'detail']);
+            Route::group(['middleware' => 'role:manager'], function () {
+                Route::post('/action/{id}', [RequestController::class,'action']);
+            });
+            Route::delete('/delete/{request}', [RequestController::class, 'destroy']);
+        });
+        Route::group(['prefix' => 'histories'], function () {
+            Route::get('/{id}',[HistoryController::class,'index']);
+            Route::get('/', [HistoryController::class, 'getList']);
+            Route::post('/post-comment', [HistoryController::class, 'addComment']);
+        });
 });

@@ -65,19 +65,23 @@ class CategoryService extends AbstractService implements CategoryServiceInterfac
             if ($data == UserStatusEnum::USER_DEACTIVE_STATUS) {
                 throw new QueryException('User chua duoc active');
             } else {
-                $cate = Category::find($category);
-                foreach ($cate as $key) {
-                    $key->name = $params['name'];
-                    $key->status = $params['status'];
+                $cate = Category::findOrFail($category->id);
+                if ($params['name'] != $cate->name) {
+                    $nameCategory = Category::where('name', '=', $params['name'])->count();
+                    if ($nameCategory > 0) {
+                        throw new QueryException('This category name already exists');
+                    }
                 }
-                $key->save();
-                $key->users()->sync($params['user_id']);
+                $cate->name = $params['name'];
+                $cate->status = $params['status'];
+                $cate->save();
+                $cate->users()->sync($params['user_id']);
                 return [
                     'message' => 'Success',
                     'data' => [
-                        'id' => $key->id,
-                        'name' => $key->name,
-                        'status' => $key->status,
+                        'id' => $cate->id,
+                        'name' => $cate->name,
+                        'status' => $cate->status,
                         'users' => $this->categoryRepository->showNameUser($params['user_id'])
                     ]
                 ];
