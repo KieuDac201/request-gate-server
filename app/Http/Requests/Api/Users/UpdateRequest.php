@@ -14,7 +14,6 @@ class UpdateRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'code'    => 'required',
             'name'      => 'required|max:25',
             'role_id'   => 'required|exists:roles,id',
             'department_id' =>  'required|exists:departments,id',

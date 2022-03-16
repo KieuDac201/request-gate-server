@@ -49,6 +49,11 @@ class RequestService extends AbstractService implements RequestServiceInterface
 
     public function store($params)
     {
+        $date = new Carbon($params['due_date']);
+        $now = new Carbon(Carbon::now());
+        if ($date < $now) {
+            throw new QueryException('The due date must be a date after yesterday.');
+        }
         $data = $this->requestRepository->store($params);
         HistoryRepository::addCreateHistory($data);
         $users = $this->requestRepository->getUser(
@@ -66,6 +71,11 @@ class RequestService extends AbstractService implements RequestServiceInterface
 
     public function update(Request $request, $params)
     {
+        $date = new Carbon($params['due_date']);
+        $now = new Carbon(Carbon::now());
+        if ($date < $now) {
+            throw new QueryException('The due date must be a date after yesterday.');
+        }
         if ($request->status == RequestStatusEnum::REQUEST_STATUS_OPEN &&
             Auth::User()->role_id == RoleEnum::ROLE_CAN_BO_NHAN_VIEN &&
             $request->status != $params['status']) {
