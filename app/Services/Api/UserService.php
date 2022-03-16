@@ -8,6 +8,7 @@ use App\Enums\DepartmentEnum;
 use App\Models\User;
 use App\Services\AbstractService;
 use GuzzleHttp\Psr7\Message;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
 use App\Enums\RoleEnum;
 use App\Exceptions\QueryException;
@@ -142,6 +143,9 @@ class UserService extends AbstractService implements UserServiceInterface
     }
     public function changePassword(User $user, $params)
     {
+        if (Auth::user()->id != $user->id) {
+            throw new CheckAuthorizationException('You do not have permission to perform this action');
+        }
         if (!(Hash::check($params['old_password'], $user->password))) {
             throw new QueryException('Old password is incorrect');
         }
