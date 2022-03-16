@@ -51,7 +51,7 @@ class RequestService extends AbstractService implements RequestServiceInterface
     {
         $date = new Carbon($params['due_date']);
         $now = new Carbon(Carbon::now());
-        if ($date < $now) {
+        if ($date < $now && $date == $now) {
             throw new QueryException('The due date must be a date after yesterday.');
         }
         $data = $this->requestRepository->store($params);
@@ -64,7 +64,7 @@ class RequestService extends AbstractService implements RequestServiceInterface
         $message = $this->message($data, $type = 'Create', $status = 'Open');
         // SendMail::dispatch($message, $users)->delay(now()->addMinute(1));
         return [
-            'message' => 'Them thanh cong',
+            'message' => 'Success',
             'data'  => $data,
         ];
     }
@@ -73,38 +73,33 @@ class RequestService extends AbstractService implements RequestServiceInterface
     {
         $date = new Carbon($params['due_date']);
         $now = new Carbon(Carbon::now());
-        if ($date < $now) {
+        if ($date < $now && $date == $now) {
             throw new QueryException('The due date must be a date after yesterday.');
         }
         if ($request->status == RequestStatusEnum::REQUEST_STATUS_OPEN &&
             Auth::User()->role_id == RoleEnum::ROLE_CAN_BO_NHAN_VIEN &&
             $request->status != $params['status']) {
-            throw new QueryException('Can bo nhan vien khong duoc update status');
+            throw new QueryException('CBNV not update status');
         }
 
         if ($request->status != RequestStatusEnum::REQUEST_STATUS_OPEN &&
             Auth::User()->role_id == RoleEnum::ROLE_CAN_BO_NHAN_VIEN) {
-            throw new QueryException('Can bo nhan vien khong duoc update request nay');
+            throw new QueryException('CBNV not update status request');
         }
 
         if ($request->status == RequestStatusEnum::REQUEST_STATUS_CLOSE &&
             Auth::User()->role_id != RoleEnum::ROLE_ADMIN) {
-            throw new QueryException('Admin moi duoc update status');
+            throw new QueryException('Admin just update status');
         }
 
         if ($request->person_in_charge != $params['person_in_charge'] &&
-            Auth::User()->role_id != RoleEnum::ROLE_ADMIN) {
-            throw new QueryException('Admin moi thay doi duoc Assign');
+            Auth::User()->role_id == RoleEnum::ROLE_QUAN_LY_BO_PHAN) {
+            throw new QueryException('QLBP not update Assign');
         }
 
         if ($request->priority != $params['priority'] &&
-            Auth::User()->role_id != RoleEnum::ROLE_ADMIN) {
-            throw new QueryException('Admin moi thay doi duoc priority');
-        }
-
-        if (Auth::User()->role_id == RoleEnum::ROLE_QUAN_LY_BO_PHAN &&
-            Auth::User()->depaerment_id != $request->createby->department_id) {
-            throw new QueryException('Khong cung phong ban nen khong update status');
+            Auth::User()->role_id == RoleEnum::ROLE_QUAN_LY_BO_PHAN) {
+            throw new QueryException('QLBP not update Priority');
         }
 
         HistoryRepository::addUpdateHistory($request, $params);
@@ -127,7 +122,7 @@ class RequestService extends AbstractService implements RequestServiceInterface
             // SendMail::dispatch($message, $users)->delay(now()->addMinute(1));
         if ($this->requestRepository->update($request, $params)) {
             return [
-                'message' => 'Update thanh cong ',
+                'message' => 'Success',
                 'data'  => $data,
             ];
         }

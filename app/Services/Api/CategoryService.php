@@ -30,14 +30,14 @@ class CategoryService extends AbstractService implements CategoryServiceInterfac
         if ($params['name']) {
             $checkName = Category::where('name', '=', $params['name'])->get();
             if ($checkName->count()) {
-                throw new QueryException('Da co category nay');
+                throw new QueryException('Already have a Category');
             }
             $users = User::findOrFail($params['user_id']);
             foreach ($users as $user) {
                 $data = $user->status;
             }
             if ($data == UserStatusEnum::USER_DEACTIVE_STATUS) {
-                   throw new QueryException('User chua duoc active');
+                   throw new QueryException('User has not been Active');
             } else {
                 $cate = new Category();
                 $cate->name = $params['name'];
