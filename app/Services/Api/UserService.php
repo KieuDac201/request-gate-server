@@ -59,23 +59,23 @@ class UserService extends AbstractService implements UserServiceInterface
             $user = User::where('role_id', '=', RoleEnum::ROLE_QUAN_LY_BO_PHAN)
             ->where('department_id', '=', $params['department_id'])-> get();
             if ($user->count() > 0) {
-                throw new QueryException('Da co 1 truong bo phan');
+                throw new QueryException('A department has only one TBP');
             }
         }
 
         if ($params['role_id'] == RoleEnum::ROLE_ADMIN && $params['department_id'] != DepartmentEnum::DEPARTMENT_HCNS) {
-            throw new QueryException('Phong nay khong duoc them Admin');
+            throw new QueryException('Admin is only in HCNS department');
         }
 
         if ($params['email']) {
             $checkemail = User::where('email', '=', $params['email'])->get();
             if ($checkemail->count() > 0) {
-                throw new QueryException('Email nay da ton tai');
+                throw new QueryException('Email already exist');
             }
         }
 
         return [
-            'message' => 'them thanh cong',
+            'message' => 'Success',
             'data' => $this->userRepository->store($params)
         ];
     }
@@ -87,16 +87,16 @@ class UserService extends AbstractService implements UserServiceInterface
             ->where('department_id', '=', $params['department_id'])->first();
 
             if ($checkuser->count() > 0 && $checkuser->id != $user->id) {
-                throw new QueryException('Da co 1 truong bo phan');
+                throw new QueryException('A department has only one TBP');
             }
         }
 
         if ($params['role_id'] == RoleEnum::ROLE_ADMIN && $params['department_id'] != 2) {
-            throw new QueryException('Phong nay khong duoc them Admin');
+            throw new QueryException('Admin is only in HCNS department');
         }
 
         return [
-            'message' => 'update thanh cong',
+            'message' => 'Success',
             'data'  => $this->userRepository->update($user, $params)
         ];
     }
