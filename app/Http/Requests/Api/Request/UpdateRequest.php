@@ -32,8 +32,12 @@ class UpdateRequest extends ApiRequest
     public function messages(): array
     {
         return [
-            'name.required' => 'A name is required',
-            'content.required' => 'A content is required',
+            'name'       => 'required',
+            'content'   => 'required',
+            'priority'  => 'required',
+            'status'    => 'required',
+            'category_id' => 'required|exists:categories,id',
+            'person_in_charge' => 'required|exists:users,id',
         ];
     }
 

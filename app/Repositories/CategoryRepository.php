@@ -16,7 +16,7 @@ class CategoryRepository extends BaseRepository implements CategoryRepositoryInt
     }
     public function getList($params)
     {
-        $query = Category::with('users:id,name')->select('id', 'name', 'status');
+        $query = Category::with('users:id,name')->select('id', 'name', 'status')->orderBy('id', 'desc');
         if (isset($params)) {
             $query->where('name', 'like', '%'.$params.'%');
         }
