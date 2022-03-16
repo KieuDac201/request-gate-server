@@ -51,13 +51,8 @@ class RequestService extends AbstractService implements RequestServiceInterface
     {
         $date = new Carbon($params['due_date']);
         $now = new Carbon(Carbon::now());
-<<<<<<< HEAD
-        if($date < $now) {
-            throw new QueryException('Khong chon ngay hom truoc');
-=======
         if ($date < $now) {
             throw new QueryException('The due date must be a date after yesterday.');
->>>>>>> 78f0f31a5c462a3a81f0684b1dceac6d16779d06
         }
         $data = $this->requestRepository->store($params);
         HistoryRepository::addCreateHistory($data);
