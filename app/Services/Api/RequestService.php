@@ -49,6 +49,11 @@ class RequestService extends AbstractService implements RequestServiceInterface
 
     public function store($params)
     {
+        $date = new Carbon($params['due_date']);
+        $now = new Carbon(Carbon::now());
+        if($date < $now) {
+            throw new QueryException('Khong chon ngay hom truoc');
+        }
         $data = $this->requestRepository->store($params);
         HistoryRepository::addCreateHistory($data);
         $users = $this->requestRepository->getUser(
@@ -57,7 +62,7 @@ class RequestService extends AbstractService implements RequestServiceInterface
             $authorId = null
         );
         $message = $this->message($data, $type = 'Create', $status = 'Open');
-        SendMail::dispatch($message, $users)->delay(now()->addMinute(1));
+        // SendMail::dispatch($message, $users)->delay(now()->addMinute(1));
         return [
             'message' => 'Them thanh cong',
             'data'  => $data,
@@ -66,6 +71,11 @@ class RequestService extends AbstractService implements RequestServiceInterface
 
     public function update(Request $request, $params)
     {
+        $date = new Carbon($params['due_date']);
+        $now = new Carbon(Carbon::now());
+        if($date < $now) {
+            throw new QueryException('Khong chon ngay hom truoc');
+        }
         if ($request->status == RequestStatusEnum::REQUEST_STATUS_OPEN &&
             Auth::User()->role_id == RoleEnum::ROLE_CAN_BO_NHAN_VIEN &&
             $request->status != $params['status']) {
@@ -114,7 +124,7 @@ class RequestService extends AbstractService implements RequestServiceInterface
         }
             $message = $this->message($request, $type = 'Update', $status);
 
-            SendMail::dispatch($message, $users)->delay(now()->addMinute(1));
+            // SendMail::dispatch($message, $users)->delay(now()->addMinute(1));
         if ($this->requestRepository->update($request, $params)) {
             return [
                 'message' => 'Update thanh cong ',

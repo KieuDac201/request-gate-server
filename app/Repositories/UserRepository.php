@@ -32,7 +32,8 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
                 'departments.id as department_id',
                 'roles.name as role_name',
                 'roles.id as role_id',
-                'users.status'
+                'users.status',
+                'email',
             );
         if (isset($param)) {
             $data->where('users.name', 'like', '%'.$param.'%')

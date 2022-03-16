@@ -20,7 +20,7 @@ class StoreRequest extends ApiRequest
             'status'    => 'required',
             'category_id' => 'required|exists:categories,id',
             'person_in_charge' => 'required|exists:users,id',
-            'due_date'  => 'required|date|after:yesterday',
+            'due_date'  => 'required|date',
         ];
     }
 
