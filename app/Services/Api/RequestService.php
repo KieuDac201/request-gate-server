@@ -49,9 +49,9 @@ class RequestService extends AbstractService implements RequestServiceInterface
 
     public function store($params)
     {
-        $date = new Carbon($params['due_date']);
-        $now = new Carbon(Carbon::now());
-        if ($date < $now && $date == $now) {
+        $date = date((new Carbon($params['due_date']))->toDateString());
+        $now =  date(Carbon::now()->toDateString());
+        if ($date < $now) {
             throw new QueryException('The due date must be a date after yesterday.');
         }
         $data = $this->requestRepository->store($params);
@@ -71,9 +71,9 @@ class RequestService extends AbstractService implements RequestServiceInterface
 
     public function update(Request $request, $params)
     {
-        $date = new Carbon($params['due_date']);
-        $now = new Carbon(Carbon::now());
-        if ($date < $now && $date == $now) {
+        $date = date((new Carbon($params['due_date']))->toDateString());
+        $now =  date(Carbon::now()->toDateString());
+        if ($date < $now) {
             throw new QueryException('The due date must be a date after yesterday.');
         }
         if ($request->status == RequestStatusEnum::REQUEST_STATUS_OPEN &&
